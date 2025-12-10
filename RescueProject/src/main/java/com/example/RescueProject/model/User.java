@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;  // Upgrade date từ String
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 public class User {  // Giữ abstract
     @Id
@@ -30,4 +28,44 @@ public class User {  // Giữ abstract
     @OneToMany(mappedBy = "rescuer")
     @JsonIgnore
     List<RescueRequest> rescueRequestsAsRescuer;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<RescueRequest> getRescueRequests() {
+        return rescueRequests;
+    }
+
+    public void setRescueRequests(List<RescueRequest> rescueRequests) {
+        this.rescueRequests = rescueRequests;
+    }
+
+    public List<RescueRequest> getRescueRequestsAsRescuer() {
+        return rescueRequestsAsRescuer;
+    }
+
+    public void setRescueRequestsAsRescuer(List<RescueRequest> rescueRequestsAsRescuer) {
+        this.rescueRequestsAsRescuer = rescueRequestsAsRescuer;
+    }
 }
