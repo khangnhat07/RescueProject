@@ -3,7 +3,24 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import ManageFilterRequest from "./ManageFilterRequest";
 import ManageRequestBody from "./ManageRequestBody";
 import "./rescue.css"
+import { fetchAllRequestAPI } from '../../service/api.service';
+import { useEffect, useState } from 'react';
 const ManageRequestPage = () => {
+
+    const [dataRequest, setDataRequest] = useState([]);
+
+    useEffect(() => {
+        loadAllRequest();
+    }, []);
+
+
+    const loadAllRequest = async () => {
+        const res = await fetchAllRequestAPI();
+
+        setDataRequest(res.data);
+
+        console.log("Data request: ", res.data);
+    }
 
     return (
         <>
@@ -18,14 +35,11 @@ const ManageRequestPage = () => {
                 </div>
             </header>
             <div className="container pb-5">
-                <div className="row g-4">
-                    <div className="col-lg-4" id="sosForm">
-
-                    </div>
-
+                <div className="row g-4 justify-content-center">
                     <div className="col-lg-8">
-                        <ManageFilterRequest />
-                        <ManageRequestBody />
+                        <ManageFilterRequest loadAllRequest={loadAllRequest}
+                            setDataRequest={setDataRequest} />
+                        <ManageRequestBody dataRequest={dataRequest} />
                     </div>
                 </div>
             </div>
