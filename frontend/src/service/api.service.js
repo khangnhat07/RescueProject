@@ -25,6 +25,18 @@ const fetchAllRequestAPI = () => {
 
 }
 
+const filterStatusRequestAPI = (status) => {
+    const URL_BACKEND = "/requests/filter-status";
+    return axios.get(URL_BACKEND, {
+        params: { status }
+    })
+}
+
+const fetchAllRequestByVictimIdAPI = (id) => {
+    const URL_BACKEND = `/requests/victim/${id}`;
+    return axios.get(URL_BACKEND)
+}
+
 export {
-    fetchAllRequestAPI, CreateRequestAPI
+    fetchAllRequestAPI, CreateRequestAPI, filterStatusRequestAPI, fetchAllRequestByVictimIdAPI
 }
