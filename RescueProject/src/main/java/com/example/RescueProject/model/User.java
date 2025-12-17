@@ -17,11 +17,12 @@ public class User {  // Giữ abstract
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Enumerated(EnumType.STRING)
+    private EUserRole role;
     private String username;
     private String phone;
     private String address;
-
+    private boolean active = true;
     @OneToMany(mappedBy = "victim")
     @JsonIgnore
     List<RescueRequest> rescueRequests;

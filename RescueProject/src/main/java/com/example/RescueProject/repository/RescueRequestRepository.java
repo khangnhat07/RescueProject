@@ -11,4 +11,5 @@ import java.util.List;
 public interface RescueRequestRepository extends JpaRepository<RescueRequest, Long> {
     List<RescueRequest> findByVictimId(Long victimId);
     List<RescueRequest> findByRescuerId(Long rescuerId);
+    List<RescueRequest> findByVictimIdAndRescuerIsNotNull(Long victimId);
 }

@@ -1,6 +1,7 @@
 package com.example.RescueProject.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,6 +17,6 @@ public class BlogCategory {
     private String categoryName;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Blog> blogs;
-
 }

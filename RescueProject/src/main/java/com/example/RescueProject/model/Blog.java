@@ -14,7 +14,7 @@ public class Blog {
     private String title;
     private String content;
     private String time;
-    private boolean isPublished;
+    private boolean published;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
