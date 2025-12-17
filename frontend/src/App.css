@@ -1,0 +1,175 @@
+/* App.css */
+:root {
+  --bs-font-sans-serif: 'Be Vietnam Pro', sans-serif;
+  --bs-font-monospace: 'JetBrains Mono', monospace;
+  --sar-red: #ef4444;
+  --sar-dark: #0f172a;
+  --sar-panel: #1e293b;
+  --sar-blue: #3b82f6;
+  --sar-green: #10b981;
+  --sar-warning: #f59e0b;
+}
+
+body { 
+  font-family: var(--bs-font-sans-serif); 
+  background-color: var(--sar-dark); 
+  color: #e2e8f0;
+}
+
+/* --- Navbar --- */
+.navbar-tactical {
+  background-color: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* --- Mission Header --- */
+.mission-header {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0) 100%);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* --- Stepper (Dark Mode) --- */
+.stepper-wrapper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin: 2rem 0;
+}
+.stepper-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 15px; left: 0; width: 100%; height: 2px;
+  background: #334155;
+  z-index: 0;
+}
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  z-index: 1;
+}
+.step-counter {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #334155;
+  color: #94a3b8;
+  border: 2px solid #0f172a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+.step-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Active/Completed States */
+.stepper-item.completed .step-counter { background-color: var(--sar-green); color: white; }
+.stepper-item.completed::after {
+  content: ''; position: absolute; top: 15px; left: -50%; width: 100%; height: 2px;
+  background: var(--sar-green); z-index: -1;
+}
+.stepper-item.active .step-counter { 
+  background-color: var(--sar-blue); 
+  color: white; 
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+.stepper-item.active .step-name { color: white; }
+
+/* --- Cards --- */
+.card-panel {
+  background-color: var(--sar-panel);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.card-header-tactical {
+  background-color: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Tactical Map --- */
+.tactical-map-container {
+  height: 400px;
+  background: #1e293b;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+/* Map Grid Overlay */
+.map-grid {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 2;
+}
+/* Radar Scan Effect */
+.radar-scan {
+  position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+  background: linear-gradient(90deg, transparent, var(--sar-green), transparent);
+  animation: scan 3s linear infinite;
+  z-index: 3;
+  opacity: 0.5;
+}
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+/* --- Timeline Log --- */
+.timeline {
+  border-left: 2px solid #334155;
+  padding-left: 20px;
+  position: relative;
+}
+.timeline-item { position: relative; margin-bottom: 25px; }
+.timeline-item::before {
+  content: "";
+  position: absolute; left: -27px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #0f172a; border: 2px solid #64748b;
+}
+.timeline-item.log-danger::before { border-color: var(--sar-red); background: var(--sar-red); box-shadow: 0 0 10px var(--sar-red); }
+.timeline-item.log-info::before { border-color: var(--sar-blue); background: var(--sar-blue); }
+.timeline-item.log-success::before { border-color: var(--sar-green); background: var(--sar-green); }
+
+/* --- Monospace Data --- */
+.data-mono { font-family: var(--bs-font-monospace); }
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+.btn-tactical {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  transition: all 0.2s;
+}
+.btn-tactical:hover {
+  background: rgba(48, 18, 18, 0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: white;
+}
