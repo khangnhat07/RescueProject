@@ -14,6 +14,8 @@ import RescueRequestPage from './components/rescueRequest/RescueRequestPage.jsx'
 import ManageRequestPage from './components/manageRescueRequest/ManageRequestPage.jsx';
 import AdminRescueRequestPage from './components/admin/AdminRescueRequestPage.jsx';
 import AdminRequestDetail from './components/admin/AdminRequestDetail.jsx';
+import ManageRequestDetail from './components/manageRescueRequest/ManageRequestDetail.jsx';
+import UserRequestDetail from './components/rescueRequest/UserRequestDetail.jsx';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/user/rescue",
     element: <RescueRequestPage />
+  },
+  {
+    path: "/user/detail-request/:id",
+    element: <UserRequestDetail />
   }
   ,
   {
@@ -30,6 +36,11 @@ const router = createBrowserRouter([
     element: <ManageRequestPage />
   }
   ,
+  ,
+  {
+    path: "/rescuer/detail-request/:id",
+    element: <ManageRequestDetail />
+  },
   {
     path: "/admin/rescue",
     element: <AdminRescueRequestPage />
