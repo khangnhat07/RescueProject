@@ -12,6 +12,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import RescueRequestPage from './components/rescueRequest/RescueRequestPage.jsx';
 import ManageRequestPage from './components/manageRescueRequest/ManageRequestPage.jsx';
+import AdminRescueRequestPage from './components/admin/AdminRescueRequestPage.jsx';
+import AdminRequestDetail from './components/admin/AdminRequestDetail.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,13 +21,23 @@ const router = createBrowserRouter([
     element: <App />
   },
   {
-    path: "/rescue",
+    path: "/user/rescue",
     element: <RescueRequestPage />
   }
   ,
   {
-    path: "/manage/rescue",
+    path: "/rescuer/rescue",
     element: <ManageRequestPage />
+  }
+  ,
+  {
+    path: "/admin/rescue",
+    element: <AdminRescueRequestPage />
+  }
+  ,
+  {
+    path: "/admin/detail-request/:id",
+    element: <AdminRequestDetail />
   }
 ]);
 

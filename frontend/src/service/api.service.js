@@ -37,6 +37,13 @@ const fetchAllRequestByVictimIdAPI = (id) => {
     return axios.get(URL_BACKEND)
 }
 
+const fetchRequestDetailByIdAPI = (id) => {
+    const URL_BACKEND = `/requests/${id}`;
+    return axios.get(URL_BACKEND);
+}
+
+
+
 export {
-    fetchAllRequestAPI, CreateRequestAPI, filterStatusRequestAPI, fetchAllRequestByVictimIdAPI
+    fetchAllRequestAPI, CreateRequestAPI, filterStatusRequestAPI, fetchAllRequestByVictimIdAPI, fetchRequestDetailByIdAPI
 }
