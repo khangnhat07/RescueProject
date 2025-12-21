@@ -2,58 +2,36 @@ package com.example.RescueProject.Controller.Blog;
 
 
 import com.example.RescueProject.model.Blog;
+import com.example.RescueProject.model.BlogCategory;
 import com.example.RescueProject.response.ApiResponse;
+import com.example.RescueProject.service.BlogCategoryService;
 import com.example.RescueProject.service.BlogService;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/blogs")
-public class BlogController {
-    private final BlogService blogService;
+public class BlogCategoryController {
 
-    public BlogController(BlogService blogService) {
-        this.blogService = blogService;
+    private final BlogCategoryService categoryService;
+
+    public BlogCategoryController(BlogCategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
-    // 🔓 GET ALL PUBLISHED BLOGS
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Blog>>> getPublishedBlogs() {
+    @GetMapping("/categories")
+    public ResponseEntity<ApiResponse<List<BlogCategory>>> getAllCategories() {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         HttpStatus.OK,
-                        "Published blogs",
-                        blogService.getPublishedBlogs(),
-                        null
-                )
-        );
-    }
-
-    // 🔓 GET BLOG DETAIL
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Blog>> getBlogDetail(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        HttpStatus.OK,
-                        "Blog detail",
-                        blogService.getPublishedBlogDetail(id),
-                        null
-                )
-        );
-    }
-
-    // 🔓 GET BLOG BY CATEGORY
-    @GetMapping("/category/{id}")
-    public ResponseEntity<ApiResponse<List<Blog>>> getBlogsByCategory(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        HttpStatus.OK,
-                        "Blogs by category",
-                        blogService.getPublishedBlogsByCategory(id),
+                        "Category list",
+                        categoryService.getAllCategories(),
                         null
                 )
         );

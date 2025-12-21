@@ -54,11 +54,9 @@ const NewsCard = ({ blog }) => {
             <p className="card-text text-secondary small">
               {preview}
             </p>
-
-            {/* 🔹 CHỈ SỬA ĐOẠN NÀY */}
             <button
               className="btn btn-sm btn-dark fw-bold"
-              onClick={() => navigate(`/blogs/${blog.id}`)}
+              onClick={() => navigate(`/blog/${blog.id}`)}
             >
               Xem chi tiết
             </button>

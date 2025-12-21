@@ -18,4 +18,5 @@ public interface BlogService {
     List<Blog> getPublishedBlogs();
     List<Blog> getPublishedBlogsByCategory(Long categoryId);
     Blog getPublishedBlogDetail(Long id);
+    List<Blog> searchPublishedBlogs(Long categoryId, String keyword);
 }

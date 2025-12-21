@@ -124,4 +124,8 @@ public class BlogServiceImpl implements BlogService {
         }
         return blog;
     }
+    @Override
+    public List<Blog> searchPublishedBlogs(Long categoryId, String keyword) {
+        return blogRepository.searchPublishedBlogs(categoryId, keyword);
+    }
 }
