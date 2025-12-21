@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 const ManageRequestBody = (props) => {
 
     const { dataRequest } = props;
@@ -59,7 +59,7 @@ const ManageRequestBody = (props) => {
                         <h6 className={`fw-bold mb-2 ${getAddressColorClass(item.status)}`}><i className="fas fa-map-marker-alt me-2"></i>{item.address}</h6>
                         <p className="mb-0 text-secondary">{item.detail}</p>
                     </div>
-                    <div className="d-flex gap-3 pt-3 border-top">
+                    <div className="d-flex justify-content-between pt-3 border-top">
                         <button
                             className={`btn btn-sm btn-light fw-bold rounded-pill px-3 
                             ${item.status === "Đang chờ tiếp nhận" ? "text-danger" : "text-secondary"}`}
@@ -68,8 +68,9 @@ const ManageRequestBody = (props) => {
                             <i className="fas fa-hand-holding-heart me-2"></i>
                             Ứng cứu
                         </button>
-                        <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"><i class="fa-solid fa-ban me-2"></i>Hủy yêu cầu</button>
-                        <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"><i class="fa-regular fa-circle-check me-2"></i>Hoàn thành</button>
+                        <Link to={`/rescuer/detail-request/${item.id}`}>
+                            <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i class="fa-solid fa-eye me-2"></i>Xem chi tiết</button>
+                        </Link>
                     </div>
                 </div>
 

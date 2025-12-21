@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 
 const RescueRequestBody = (props) => {
 
@@ -62,6 +62,11 @@ const RescueRequestBody = (props) => {
                         <div className="mb-3">
                             <h6 className={`fw-bold mb-2 ${getAddressColorClass(item.status)}`}><i className="fas fa-map-marker-alt me-2"></i>{item.address}</h6>
                             <p className="mb-0 text-secondary">{item.detail}</p>
+                        </div>
+                        <div className="d-fle pt-3 border-top">
+                            <Link to={`/user/detail-request/${item.id}`}>
+                                <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i class="fa-solid fa-eye me-2"></i>Xem chi tiết</button>
+                            </Link>
                         </div>
                     </div>
                 ))}
