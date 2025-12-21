@@ -58,5 +58,33 @@ public class BlogController {
                 )
         );
     }
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<Blog>>> searchBlogs(
+            @RequestParam String keyword
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Search blogs",
+                        blogService.searchPublishedBlogs(null, keyword),
+                        null
+                )
+        );
+    }
 
+    // 🔍 SEARCH BY CATEGORY
+    @GetMapping("/category/{id}/search")
+    public ResponseEntity<ApiResponse<List<Blog>>> searchBlogsByCategory(
+            @PathVariable Long id,
+            @RequestParam String keyword
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK,
+                        "Search blogs by category",
+                        blogService.searchPublishedBlogs(id, keyword),
+                        null
+                )
+        );
+    }
 }

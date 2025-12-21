@@ -1,9 +1,7 @@
 package com.example.RescueProject.service;
 
 import com.example.RescueProject.model.RescueRequest;
-import com.example.RescueProject.model.User;
 import com.example.RescueProject.repository.RescueRequestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -86,14 +84,4 @@ public class RescueRequestServiceImpl implements RescueRequestService {
             throw  new IllegalArgumentException("Not found rescue request");
         }
     }
-    @Override
-    public List<User> getRescueTeamsByVictim(Long victimId) {
-        List<RescueRequest> requests =
-                rescueRequestRepository.findByVictimIdAndRescuerIsNotNull(victimId);
-        return requests.stream()
-                .map(RescueRequest::getRescuer)
-                .distinct()
-                .toList();
-    }
-
 }

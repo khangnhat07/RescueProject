@@ -1,8 +1,7 @@
-package com.example.RescueProject.service.Impl;
+package com.example.RescueProject.service;
 
 import com.example.RescueProject.model.TypeRequest;
 import com.example.RescueProject.repository.TypeRescueRequestRepository;
-import com.example.RescueProject.service.TypeRescueRequestService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
