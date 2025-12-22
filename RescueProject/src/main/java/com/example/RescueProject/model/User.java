@@ -25,7 +25,6 @@ public class User {
     private String password;
     // bcrypt
     private String email;
-    private String name;
     private String phone;
     private String date;
 
@@ -35,4 +34,12 @@ public class User {
     @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
+    @OneToMany(mappedBy = "victim")
+    @JsonIgnore
+    List<RescueRequest> rescueRequests;
+
+
+    @OneToMany(mappedBy = "rescuer")
+    @JsonIgnore
+    List<RescueRequest> rescueRequestsAsRescuer;
 }

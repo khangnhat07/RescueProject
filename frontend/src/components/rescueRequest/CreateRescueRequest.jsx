@@ -7,7 +7,6 @@ import { CreateRequestAPI } from "../../service/api.service";
 const CreateRescueRequest = (props) => {
 
     const { loadAllRequest } = props;
-    const victimId = 1;
     const [address, setAddress] = useState("");
     const [detail, setDetail] = useState("");
     const [typeId, setTypeId] = useState("");
@@ -33,7 +32,7 @@ const CreateRescueRequest = (props) => {
 
     const hanldeBtnCreate = async () => {
         const timeCreated = getCurrentDateTimeString();
-        const res = await CreateRequestAPI(victimId, address, detail, timeCreated, typeId)
+        const res = await CreateRequestAPI(address, detail, timeCreated, typeId)
         if (res.data) {
             alert("Tạo yêu cầu cứu hộ thành công!");
             resetInput();

@@ -15,4 +15,7 @@ public interface RescueRequestService {
     List<RescueRequest> findRescueByRescuerId(Long id);
     RescueRequest updateRescueByRescuer(Long id, RescueRequest rescueRequest);
     List<RescueRequest> findByStatus(EStatus status);
+    List<RescueRequest> findRescueByVictim();
+    List<RescueRequest> findRescueByRescuer();
+    RescueRequest acceptRequest(Long id);
 }

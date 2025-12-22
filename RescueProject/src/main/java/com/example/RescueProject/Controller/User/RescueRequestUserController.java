@@ -2,8 +2,10 @@ package com.example.RescueProject.Controller.User;
 
 import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
+import com.example.RescueProject.model.User;
 import com.example.RescueProject.response.ApiResponse;
 import com.example.RescueProject.service.RescueRequestService;
+import com.example.RescueProject.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,10 @@ public class RescueRequestUserController {
     private RescueRequestService rescueRequestService;
 
 
+
     public RescueRequestUserController(RescueRequestService rescueRequestService) {
         this.rescueRequestService = rescueRequestService;
+
     }
 
     @GetMapping("/requests")
@@ -27,6 +31,7 @@ public class RescueRequestUserController {
 
     @PostMapping("/requests")
     public ResponseEntity<ApiResponse<RescueRequest>> createRescue(@RequestBody RescueRequest rescueRequest){
+
         RescueRequest newRequest =this.rescueRequestService.createRescue(rescueRequest);
         var result =new ApiResponse<>(HttpStatus.CREATED,"Create Rescue", newRequest,null);
         return ResponseEntity.ok().body(result);
@@ -69,5 +74,12 @@ public class RescueRequestUserController {
         return ResponseEntity.ok().body(result);
     }
 
+
+    @GetMapping("/request/my-request")
+    public ResponseEntity<ApiResponse<List<RescueRequest>>> findRequestByVictim() {
+        List<RescueRequest> rescueRequestList = this.rescueRequestService.findRescueByVictim();
+        var result = new ApiResponse<>(HttpStatus.OK,"Get request by current victim",rescueRequestList,null);
+        return ResponseEntity.ok().body(result);
+    }
 
 }

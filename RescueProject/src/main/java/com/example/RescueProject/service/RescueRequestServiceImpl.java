@@ -2,9 +2,11 @@ package com.example.RescueProject.service;
 
 import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
+import com.example.RescueProject.model.User;
 import com.example.RescueProject.repository.RescueRequestRepository;
 import com.example.RescueProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +31,17 @@ public class RescueRequestServiceImpl implements RescueRequestService {
 
     @Override
     public RescueRequest createRescue(RescueRequest rescueRequest) {
+
+        String email = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("Người dùng không tồn tại");
+        }
+
+        rescueRequest.setVictim(user);
+
         rescueRequest.setStatus(EStatus.WAITING_ACCEPT);
         return rescueRequestRepository.save(rescueRequest);
     }
@@ -96,4 +109,43 @@ public class RescueRequestServiceImpl implements RescueRequestService {
     public List<RescueRequest> findByStatus(EStatus  status) {
         return rescueRequestRepository.findByStatus(status);
     }
+
+    @Override
+    public List<RescueRequest> findRescueByVictim() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email);
+
+        return rescueRequestRepository.findByVictimId(user.getId());
+    }
+
+    @Override
+    public List<RescueRequest> findRescueByRescuer() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User rescuer = userRepository.findByEmail(email);
+
+        return rescueRequestRepository.findByRescuerId(rescuer.getId());
+    }
+
+    @Override
+    public RescueRequest acceptRequest(Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User rescuer = userRepository.findByEmail(email);
+
+        Optional<RescueRequest> rescueRequest = rescueRequestRepository.findById(id);
+        if (rescueRequest.isPresent()){
+            RescueRequest request = rescueRequest.get();
+            if (request.getStatus() == EStatus.WAITING_ACCEPT){
+                request.setStatus(EStatus.IN_PROCESS);
+                request.setRescuer(rescuer);
+                return rescueRequestRepository.save(request);
+            }
+            else {
+                throw new RuntimeException("Request have been accepted");
+            }
+        }
+        else {
+            throw  new IllegalArgumentException("Not found rescue request");
+        }
+    }
+
 }

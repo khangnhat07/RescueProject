@@ -54,7 +54,7 @@ public class Webconfig implements WebMvcConfigurer {
                 "http://localhost:4200",
                 "https://food-frontend-mbls.onrender.com"  // thêm domain frontend mới
         ));
-        cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
         cfg.setAllowedHeaders(Collections.singletonList("*"));
         cfg.setExposedHeaders(Collections.singletonList("Authorization"));
         cfg.setAllowCredentials(true);
