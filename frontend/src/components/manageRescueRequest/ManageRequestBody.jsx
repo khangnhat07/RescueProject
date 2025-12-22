@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
+import { acceptRequestAPI } from "../../service/api.service";
 const ManageRequestBody = (props) => {
 
-    const { dataRequest } = props;
+    const { dataRequest, loadAllRequest } = props;
+    const handleAccept = async (id) => {
+        if (window.confirm("Bạn có chắc chắn muốn tiếp nhận ca cứu hộ này không?")) {
+            try {
+                const res = await acceptRequestAPI(id);
+                // Tùy vào cấu trúc ApiResponse của bạn, check res.status hoặc res.data
+                if (res) {
+                    alert("Tiếp nhận thành công! Hãy di chuyển đến vị trí nạn nhân.");
+                    if (loadAllRequest) await loadAllRequest(); // Gọi lại hàm fetch ở component cha
+                }
+            } catch (error) {
+                console.error("Lỗi khi tiếp nhận:", error);
+                alert("Không thể tiếp nhận. Có thể yêu cầu này đã được người khác nhận.");
+            }
+        }
+    };
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -64,9 +80,10 @@ const ManageRequestBody = (props) => {
                             className={`btn btn-sm btn-light fw-bold rounded-pill px-3 
                             ${item.status === "WAITING_ACCEPT" ? "text-danger" : "text-secondary"}`}
                             disabled={item.status !== "WAITING_ACCEPT"}
+                            onClick={() => handleAccept(item.id)} // Gắn sự kiện vào đây
                         >
                             <i className="fas fa-hand-holding-heart me-2"></i>
-                            Ứng cứu
+                            {item.status === "WAITING_ACCEPT" ? "Ứng cứu" : "Đã tiếp nhận"}
                         </button>
                         <Link to={`/rescuer/detail-request/${item.id}`}>
                             <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i className="fa-solid fa-eye me-2"></i>Xem chi tiết</button>

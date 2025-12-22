@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { filterStatusRequestAPI } from "../../service/api.service";
+import { fetchAllRequestByRescuerAPI, filterStatusRequestAPI } from "../../service/api.service";
 
 const ManageFilterRequest = (props) => {
 
@@ -20,6 +20,13 @@ const ManageFilterRequest = (props) => {
         setDataRequest(res.data);
 
     };
+
+    const fetchAllRequestByVictim = async () => {
+        const res = await fetchAllRequestByRescuerAPI();
+        console.log("Filter result: ", res.data);
+
+        setDataRequest(res.data);
+    }
 
     return (
         <>
@@ -57,7 +64,10 @@ const ManageFilterRequest = (props) => {
                         setStatusFilter("");
                         await loadAllRequest();
                     }}>Tất cả tin báo</button></li>
-                <li className="nav-item"><button className="nav-link">Tin đã nhận</button></li>
+                <li className="nav-item"><button className="nav-link"
+                    onClick={async () => {
+                        //await fetchAllRequestByVictim();
+                    }}>Tin đã nhận</button></li>
             </ul>
         </>
     )

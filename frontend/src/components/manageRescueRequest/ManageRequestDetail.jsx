@@ -1,11 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchRequestDetailByIdAPI } from "../../service/api.service";
-
+import { acceptRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
+import { useAuth } from '../../context/AuthContext';
 
 const ManageRequestDetail = () => {
     const { id } = useParams();
     const [request, setRequest] = useState(null);
+    const { user } = useAuth()
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         loadDetail();
@@ -18,9 +21,34 @@ const ManageRequestDetail = () => {
 
         console.log("Data request: ", res.data);
     };
+
+    const handleAcceptRequest = async () => {
+        if (window.confirm(`Bạn xác nhận tiếp nhận cứu hộ cho yêu cầu #${id}?`)) {
+            setIsSubmitting(true);
+            try {
+                const res = await acceptRequestAPI(id);
+                if (res) {
+                    alert("Tiếp nhận thành công! Trạng thái đã chuyển sang Đang xử lý.");
+                    await loadDetail(); // Tải lại dữ liệu để cập nhật giao diện (ẩn nút tiếp nhận)
+                }
+            } catch (error) {
+                console.error("Lỗi tiếp nhận:", error);
+                alert("Không thể tiếp nhận. Có thể yêu cầu đã có người khác nhận hoặc lỗi kết nối.");
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+    };
     if (!request) {
         return <div>Đang tải...</div>;
     }
+
+    // --- LOGIC KIỂM TRA QUYỀN ---
+    const isWaiting = request.status === "WAITING_ACCEPT";
+    const isProcessedByMe = request.rescuer && request.rescuer.id === user.id;
+    const isProcessedByOther = request.rescuer && request.rescuer.id !== user.id;
+
+
     return (
         <>
             <div className="container">
@@ -31,16 +59,39 @@ const ManageRequestDetail = () => {
                             Yêu cầu # {id}
                         </h4>
                         <p className="text-muted mb-0">Thời gian báo: {request.datetime} </p>
+                        <span className={`badge ${request.status === 'WAITING_ACCEPT' ? 'bg-danger' : 'bg-primary'}`}>
+                            {request.status === 'WAITING_ACCEPT' ? 'Đang chờ' : 'Đang thực hiện'}
+                        </span>
 
                     </div>
 
                     <div className="mt-2 mt-md-0">
-                        <button className="btn btn-outline-danger me-2">
-                            <i className="fas fa-times"></i> Từ chối
-                        </button>
-                        <button className="btn btn-success">
-                            <i className="fas fa-check-circle"></i> Tiếp nhận cứu hộ
-                        </button>
+                        {/* TH 1: Chưa có ai nhận */}
+                        {isWaiting && (
+                            <button className="btn btn-success" onClick={handleAcceptRequest}>
+                                <i className="fas fa-check-circle me-1"></i> Tiếp nhận cứu hộ
+                            </button>
+                        )}
+
+                        {/* TH 2: CHÍNH TÔI đã nhận -> Hiện nút Hủy và Cập nhật */}
+                        {isProcessedByMe && (
+                            <>
+                                <button className="btn btn-danger me-2" onClick={handleCancelRequest}>
+                                    <i className="fas fa-undo me-1"></i> Hủy tiếp nhận
+                                </button>
+                                <button className="btn btn-dark" disabled>
+                                    <i className="fas fa-user-check me-1"></i> Bạn đang xử lý
+                                </button>
+                            </>
+                        )}
+
+                        {/* TH 3: NGƯỜI KHÁC đã nhận -> Chỉ hiện thông báo, không cho bấm gì */}
+                        {isProcessedByOther && (
+                            <div className="alert alert-warning mb-0 py-2">
+                                <i className="fas fa-info-circle me-2"></i>
+                                Nhân viên <strong>{request.rescuer.username}</strong> đang xử lý ca này
+                            </div>
+                        )}
                     </div>
                 </div>
 
