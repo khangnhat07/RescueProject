@@ -1,0 +1,63 @@
+/* =========================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================= */
+:root {
+  --bs-font-sans-serif: 'Be Vietnam Pro', sans-serif;
+  --sar-red: #dc3545;
+  --sar-dark: #0f172a;
+}
+
+body { 
+  font-family: var(--bs-font-sans-serif); 
+  background-color: #f8f9fa; 
+}
+
+/* =========================================
+   2. HERO SECTION
+   ========================================= */
+.hero-section {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(220, 53, 69, 0.4) 100%), 
+              url('https://images.unsplash.com/photo-1464695110811-dcf3903dc2f4?q=80&w=1974&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+}
+
+/* =========================================
+   3. ANIMATIONS (Pulse)
+   ========================================= */
+.btn-sos-pulse {
+  animation: pulse-animation 2s infinite;
+  box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+}
+
+@keyframes pulse-animation {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* =========================================
+   4. COMPONENTS: CARDS
+   ========================================= */
+.rescue-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rescue-card:hover {
+  transform: translateY(-5px);
+  /* Dùng !important để đè Bootstrap shadow nếu cần */
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+}
+
+/* =========================================
+   5. COMPONENTS: STICKY BUTTON
+   ========================================= */
+.sticky-sos {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1030;
+}

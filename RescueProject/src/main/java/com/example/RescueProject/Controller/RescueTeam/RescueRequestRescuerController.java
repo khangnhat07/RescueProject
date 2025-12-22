@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/requests/rescuer")
+@RequestMapping("rescueteam/requests/")
 public class RescueRequestRescuerController {
     private RescueRequestService rescueRequestService;
 

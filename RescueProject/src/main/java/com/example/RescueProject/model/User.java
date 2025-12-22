@@ -1,6 +1,7 @@
 package com.example.RescueProject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,63 +10,29 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;  // Upgrade date từ String
 import java.util.List;
 
-
 @Entity
-public class User {  // Giữ abstract
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    private String username;   // dùng để login
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    // bcrypt
+    private String email;
+    private String name;
     private String phone;
-    private String address;
+    private String date;
 
-    @OneToMany(mappedBy = "victim")
-    @JsonIgnore
-    List<RescueRequest> rescueRequests;
+    @Enumerated(EnumType.STRING)
+    private EUserRole role;   // ROLE_VICTIM, ROLE_RESCUETEAM, ROLE_ADMIN
 
-
-    @OneToMany(mappedBy = "rescuer")
-    @JsonIgnore
-    List<RescueRequest> rescueRequestsAsRescuer;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<RescueRequest> getRescueRequests() {
-        return rescueRequests;
-    }
-
-    public void setRescueRequests(List<RescueRequest> rescueRequests) {
-        this.rescueRequests = rescueRequests;
-    }
-
-    public List<RescueRequest> getRescueRequestsAsRescuer() {
-        return rescueRequestsAsRescuer;
-    }
-
-    public void setRescueRequestsAsRescuer(List<RescueRequest> rescueRequestsAsRescuer) {
-        this.rescueRequestsAsRescuer = rescueRequestsAsRescuer;
-    }
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 }
