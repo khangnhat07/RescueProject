@@ -6,11 +6,11 @@ const RescueRequestBody = (props) => {
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "status-badge st-done"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "status-badge st-processing"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "status-badge st-waiting"; // đỏ
             default:
                 return "status-badge st-waiting";
@@ -19,11 +19,11 @@ const RescueRequestBody = (props) => {
 
     const getIconStatusClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "fas fa-check-circle me-1"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "fas fa-spinner fa-spin me-1"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "fas fa-exclamation-circle me-1"; // đỏ
             default:
                 return "fas fa-exclamation-circle me-1";
@@ -65,7 +65,7 @@ const RescueRequestBody = (props) => {
                         </div>
                         <div className="d-fle pt-3 border-top">
                             <Link to={`/user/detail-request/${item.id}`}>
-                                <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i class="fa-solid fa-eye me-2"></i>Xem chi tiết</button>
+                                <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i className="fa-solid fa-eye me-2"></i>Xem chi tiết</button>
                             </Link>
                         </div>
                     </div>
@@ -75,7 +75,7 @@ const RescueRequestBody = (props) => {
 
             <nav className="mt-5">
                 <ul className="pagination justify-content-center">
-                    <li className="page-item disabled"><a className="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
+                    <li className="page-item disabled"><a className="page-link" href="#"><i className="fas fa-chevron-left"></i></a></li>
                     <li className="page-item active"><a className="page-link" href="#">1</a></li>
                     <li className="page-item"><a className="page-link" href="#">2</a></li>
                     <li className="page-item"><a className="page-link" href="#">3</a></li>

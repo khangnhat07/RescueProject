@@ -1,7 +1,9 @@
 package com.example.RescueProject.service;
 
+import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
 import com.example.RescueProject.repository.RescueRequestRepository;
+import com.example.RescueProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,12 @@ import java.util.Optional;
 @Service
 public class RescueRequestServiceImpl implements RescueRequestService {
     private RescueRequestRepository rescueRequestRepository;
+    private final UserRepository userRepository;
 
-    public RescueRequestServiceImpl(RescueRequestRepository rescueRequestRepository) {
+
+    public RescueRequestServiceImpl(RescueRequestRepository rescueRequestRepository,UserRepository userRepository) {
         this.rescueRequestRepository =rescueRequestRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -24,6 +29,7 @@ public class RescueRequestServiceImpl implements RescueRequestService {
 
     @Override
     public RescueRequest createRescue(RescueRequest rescueRequest) {
+        rescueRequest.setStatus(EStatus.WAITING_ACCEPT);
         return rescueRequestRepository.save(rescueRequest);
     }
 
@@ -84,5 +90,10 @@ public class RescueRequestServiceImpl implements RescueRequestService {
         else {
             throw  new IllegalArgumentException("Not found rescue request");
         }
+    }
+
+    @Override
+    public List<RescueRequest> findByStatus(EStatus  status) {
+        return rescueRequestRepository.findByStatus(status);
     }
 }

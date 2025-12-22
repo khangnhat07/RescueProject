@@ -2,21 +2,26 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { Link } from "react-router-dom";
+import UpdateRequestModal from "./UserUpdateRequest";
+import UpdateRescueRequestModal from "./UserUpdateRequest";
 
 const UserRequestDetail = () => {
     const { id } = useParams();
     const [request, setRequest] = useState(null);
 
+    // 1. State cho Modal và Form
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+
     const getStatusClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
-                return "text-success"; // xanh lá
-            case "Đội cứu hộ đang đến":
-                return "text-primary"; // xanh biển
-            case "Đang chờ tiếp nhận":
-                return "text-danger"; // đỏ
+            case "COMPLETE":
+                return "status-badge st-done"; // xanh lá
+            case "IN_PROCESS":
+                return "status-badge st-processing"; // xanh biển
+            case "WAITING_ACCEPT":
+                return "status-badge st-waiting"; // đỏ
             default:
-                return "text-danger";
+                return "status-badge st-waiting";
         }
     };
 
@@ -30,7 +35,12 @@ const UserRequestDetail = () => {
         setRequest(res.data);
 
         console.log("Data request: ", res.data);
+
     };
+
+
+
+
     if (!request) {
         return <div>Đang tải...</div>;
     }
@@ -52,7 +62,10 @@ const UserRequestDetail = () => {
                                     <p className="text-muted mb-0">Thời gian báo: {request.datetime} </p>
                                 </div>
 
-                                <div className="mt-2 mt-md-0">
+                                <div className="d-flex gap-2">
+                                    <button onClick={() => setShowUpdateModal(true)} className="btn btn-danger rounded-pill px-4 shadow-sm">
+                                        <i class="fa-solid fa-pen-to-square me-2"></i>Cập nhật
+                                    </button>
                                     <Link to={`/user/rescue`}>
                                         <button className="btn btn-success rounded-pill px-4 shadow-sm">
                                             <i className="fa-solid fa-arrow-left me-2"></i> Trở về
@@ -111,11 +124,16 @@ const UserRequestDetail = () => {
                                     <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 2" />
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
+
+            <UpdateRescueRequestModal
+                show={showUpdateModal}
+                handleClose={() => setShowUpdateModal(false)}
+                data={request}
+            />
         </>
     )
 

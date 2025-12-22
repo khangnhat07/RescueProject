@@ -1,5 +1,6 @@
 package com.example.RescueProject.Controller.User;
 
+import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
 import com.example.RescueProject.response.ApiResponse;
 import com.example.RescueProject.service.RescueRequestService;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 public class RescueRequestUserController {
     private RescueRequestService rescueRequestService;
+
 
     public RescueRequestUserController(RescueRequestService rescueRequestService) {
         this.rescueRequestService = rescueRequestService;
@@ -59,5 +61,13 @@ public class RescueRequestUserController {
         return ResponseEntity.ok().body(result);
 
     }
+
+    @GetMapping("/requests/filter-status")
+    public ResponseEntity<ApiResponse<List<RescueRequest>>> findRequestByStatus(@RequestParam EStatus status){
+        List<RescueRequest> rescueRequests = this.rescueRequestService.findByStatus(status);
+        var result = new ApiResponse<>(HttpStatus.OK,"Get request by Status", rescueRequests,null);
+        return ResponseEntity.ok().body(result);
+    }
+
 
 }

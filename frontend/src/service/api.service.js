@@ -1,6 +1,6 @@
 import axios from './axios.customize';
 
-const CreateRequestAPI = (victimId, address, detail, status, datetime, typeId) => {
+const CreateRequestAPI = (victimId, address, detail, datetime, typeId) => {
 
     const URL_BACKEND = "/requests";
     const data = {
@@ -10,7 +10,6 @@ const CreateRequestAPI = (victimId, address, detail, status, datetime, typeId) =
         address: address,
         datetime: datetime,
         detail: detail,
-        status: status,
         type: {
             id: typeId
         }

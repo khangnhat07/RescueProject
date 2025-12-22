@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 
-
+@Data
 @Entity
 public class TypeRequest {
     @Id
@@ -20,19 +20,4 @@ public class TypeRequest {
     @JsonIgnore
     List<RescueRequest> rescueRequests;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<RescueRequest> getRescueRequests() {
-        return rescueRequests;
-    }
-
-    public void setRescueRequests(List<RescueRequest> rescueRequests) {
-        this.rescueRequests = rescueRequests;
-    }
 }

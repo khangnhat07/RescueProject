@@ -5,11 +5,11 @@ const ManageRequestBody = (props) => {
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "status-badge st-done"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "status-badge st-processing"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "status-badge st-waiting"; // đỏ
             default:
                 return "status-badge st-waiting";
@@ -18,11 +18,11 @@ const ManageRequestBody = (props) => {
 
     const getIconStatusClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "fas fa-check-circle me-1"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "fas fa-spinner fa-spin me-1"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "fas fa-exclamation-circle me-1"; // đỏ
             default:
                 return "fas fa-exclamation-circle me-1";
@@ -44,7 +44,7 @@ const ManageRequestBody = (props) => {
     return (
         <div className="case-feed">
             {dataRequest.map((item, index) => (
-                <div className="feed-card p-4">
+                <div key={index} className="feed-card p-4">
                     <div className="d-flex justify-content-between align-items-start mb-3">
                         <div className="d-flex align-items-center">
                             <div className="avatar-circle bg-secondary me-3">H</div>
@@ -62,14 +62,14 @@ const ManageRequestBody = (props) => {
                     <div className="d-flex justify-content-between pt-3 border-top">
                         <button
                             className={`btn btn-sm btn-light fw-bold rounded-pill px-3 
-                            ${item.status === "Đang chờ tiếp nhận" ? "text-danger" : "text-secondary"}`}
-                            disabled={item.status !== "Đang chờ tiếp nhận"}
+                            ${item.status === "WAITING_ACCEPT" ? "text-danger" : "text-secondary"}`}
+                            disabled={item.status !== "WAITING_ACCEPT"}
                         >
                             <i className="fas fa-hand-holding-heart me-2"></i>
                             Ứng cứu
                         </button>
                         <Link to={`/rescuer/detail-request/${item.id}`}>
-                            <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i class="fa-solid fa-eye me-2"></i>Xem chi tiết</button>
+                            <button className="btn btn-sm btn-light text-secondary fw-bold rounded-pill px-3"> <i className="fa-solid fa-eye me-2"></i>Xem chi tiết</button>
                         </Link>
                     </div>
                 </div>

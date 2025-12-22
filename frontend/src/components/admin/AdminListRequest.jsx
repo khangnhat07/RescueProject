@@ -6,11 +6,11 @@ const AdminListRequest = (props) => {
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "status-badge st-done"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "status-badge st-processing"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "status-badge st-waiting"; // đỏ
             default:
                 return "status-badge st-waiting";
