@@ -31,9 +31,9 @@ public class RescueRequestRescuerController {
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("//request/my-accept")
+    @GetMapping("/my-accept")
     public ResponseEntity<ApiResponse<List<RescueRequest>>> findRequestByRescuer(){
-        List<RescueRequest> rescueRequests = this.rescueRequestService.findRescueByVictim();
+        List<RescueRequest> rescueRequests = this.rescueRequestService.findRescueByRescuer();
         var result = new ApiResponse<>(HttpStatus.OK,"Find Request By Rescuer", rescueRequests,null);
         return ResponseEntity.ok().body(result);
     }
@@ -45,6 +45,17 @@ public class RescueRequestRescuerController {
             RescueRequest updated = rescueRequestService.acceptRequest(id);
             return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Đã tiếp nhận yêu cầu", updated, null));
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/cancel")
+    @PreAuthorize("hasRole('RESCUETEAM')")
+    public ResponseEntity<?> cancelRescue(@PathVariable Long id){
+        try{
+            RescueRequest updated = rescueRequestService.cancelRequest(id);
+            return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,"Đã hủy yêu cầu",updated,null));
+        } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

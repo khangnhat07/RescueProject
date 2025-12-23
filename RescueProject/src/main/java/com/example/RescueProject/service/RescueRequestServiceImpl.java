@@ -126,6 +126,10 @@ public class RescueRequestServiceImpl implements RescueRequestService {
         return rescueRequestRepository.findByRescuerId(rescuer.getId());
     }
 
+
+
+    //rescuer feature
+
     @Override
     public RescueRequest acceptRequest(Long id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -147,5 +151,34 @@ public class RescueRequestServiceImpl implements RescueRequestService {
             throw  new IllegalArgumentException("Not found rescue request");
         }
     }
+
+    @Override
+    public RescueRequest cancelRequest(Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User rescuer = this.userRepository.findByEmail(email);
+
+        Optional<RescueRequest> rescueRequest = rescueRequestRepository.findById(id);
+        if (rescueRequest.isPresent()){
+            RescueRequest request = rescueRequest.get();
+            // kiểm tra quyền
+            if (request.getStatus() == EStatus.IN_PROCESS ){
+                if (request.getRescuer() != null && request.getRescuer().getEmail().equals(email)){
+                    // thực hiện hủy request
+                    request.setStatus(EStatus.WAITING_ACCEPT);
+                    request.setRescuer(null);
+                    return rescueRequestRepository.save(request);
+                }
+                else {
+                    throw new RuntimeException("Bạn không có quyền hủy yêu cầu của người khác!");
+                }
+            }
+            else {
+                throw new RuntimeException("Chỉ có thể hủy yêu cầu đang trong quá trình xử lý.");
+            }
+    }else {
+            throw new IllegalArgumentException("Không tìm thấy yêu cầu cứu hộ này.");
+        }
+    }
+
 
 }
