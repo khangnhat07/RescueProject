@@ -19,6 +19,7 @@ import ManageRequestPage from './components/manageRescueRequest/ManageRequestPag
 import ManageRequestDetail from './components/manageRescueRequest/ManageRequestDetail.jsx';
 import AdminRescueRequestPage from './components/admin/AdminRescueRequestPage.jsx';
 import AdminRequestDetail from './components/admin/AdminRequestDetail.jsx';
+import ChatPage from "./components/chat/ChatPage.jsx";
 
 // --- BƯỚC 1: TẠO COMPONENT LAYOUT CHUNG ---
 const Layout = () => {
@@ -72,6 +73,10 @@ function App() {
         {
           path: "/admin/detail-request/:id",
           element: <AdminRequestDetail />
+        },
+        {
+          path: "/chat",
+          element: <ChatPage />
         },
       ],
     },

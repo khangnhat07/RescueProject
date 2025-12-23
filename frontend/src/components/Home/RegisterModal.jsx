@@ -62,7 +62,6 @@ const RegisterModal = () => {
 
       // --- 4. XỬ LÝ AUTO-LOGIN (Thay đổi lớn nhất) ---
       // Backend trả về: { jwt: "...", role: "...", message: "..." }
-
       const token = response.data.jwt;
       const userData = {
         email: formData.email, // Lấy email từ form người dùng vừa nhập

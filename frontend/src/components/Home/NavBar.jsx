@@ -39,7 +39,7 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse" id="mainNav">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 fw-medium align-items-center">
-
+              
               <li className="nav-item"><Link className="nav-link active" to="/">Trang chủ</Link></li>
               <li className="nav-item"><a className="nav-link" href="#live-map">Bản đồ số</a></li>
               <li className="nav-item"><a className="nav-link" href="#resources">Nguồn lực</a></li>

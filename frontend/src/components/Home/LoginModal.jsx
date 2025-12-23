@@ -54,7 +54,6 @@ const LoginModal = () => {
       login(token, userData);
 
       // --- BƯỚC 4: ĐÓNG MODAL & RESET FORM ---
-
       // Reset form
       setCredentials({ email: '', password: '' });
 
@@ -135,7 +134,6 @@ const LoginModal = () => {
                 />
                 <label htmlFor="floatingLoginPassword">Mật khẩu</label>
               </div>
-
               {/* Tiện ích */}
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <div className="form-check">

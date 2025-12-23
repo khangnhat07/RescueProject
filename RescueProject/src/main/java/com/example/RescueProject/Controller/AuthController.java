@@ -5,8 +5,7 @@ import com.example.RescueProject.model.EUserRole;
 import com.example.RescueProject.model.User;
 import com.example.RescueProject.repository.UserRepository;
 import com.example.RescueProject.request.LoginRequest;
-
-import com.example.RescueProject.response.AuthResponse;
+import com.example.RescueProject.respone.AuthResponse;
 import com.example.RescueProject.service.CustomerUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,6 @@ public class AuthController {
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
 
-
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
         // Check if email already exists
@@ -53,7 +51,7 @@ public class AuthController {
         createdUser.setEmail(user.getEmail());
         createdUser.setUsername(user.getUsername());
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        createdUser.setRole(user.getRole());  // Ensure the role is set
+        createdUser.setRole(user.getRole()); // Ensure the role is set
 
         // Save the user to the database
         User savedUser = userRepository.save(createdUser);
@@ -64,9 +62,7 @@ public class AuthController {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
                 user.getPassword(),
-                authorities
-        );
-
+                authorities);
 
         // Set the authentication in the SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -83,19 +79,18 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
-
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse>singin(@RequestBody LoginRequest req){
-        String username= req.getEmail();
+    public ResponseEntity<AuthResponse> singin(@RequestBody LoginRequest req) {
+        String username = req.getEmail();
 
         String password = req.getPassword();
 
-        Authentication authentication= authenticate(username,password);
+        Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Collection<? extends GrantedAuthority> authorities= authentication.getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        String role= authorities.isEmpty()?null:authorities.iterator().next().getAuthority();
+        String role = authorities.isEmpty() ? null : authorities.iterator().next().getAuthority();
         String jwt = jwtProvider.generateToken(authentication);
 
         AuthResponse authResponse = new AuthResponse();
@@ -108,14 +103,13 @@ public class AuthController {
 
     private Authentication authenticate(String username, String password) {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
-        if(userDetails == null){
+        if (userDetails == null) {
             throw new BadCredentialsException("Invalid username");
         }
-        if(!passwordEncoder.matches(password, userDetails.getPassword())){
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("invalid password");
         }
-        return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-
 
 }

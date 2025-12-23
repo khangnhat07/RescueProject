@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;  // Upgrade date từ String
+import java.time.LocalDateTime; // Upgrade date từ String
 import java.util.List;
 
 @Entity
@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;   // dùng để login
+    private String username; // dùng để login
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     // bcrypt
@@ -29,7 +29,7 @@ public class User {
     private String date;
 
     @Enumerated(EnumType.STRING)
-    private EUserRole role;   // ROLE_VICTIM, ROLE_RESCUETEAM, ROLE_ADMIN
+    private EUserRole role; // ROLE_VICTIM, ROLE_RESCUETEAM, ROLE_ADMIN
 
     @OneToOne
     @JoinColumn(name = "address_id")
@@ -37,7 +37,6 @@ public class User {
     @OneToMany(mappedBy = "victim")
     @JsonIgnore
     List<RescueRequest> rescueRequests;
-
 
     @OneToMany(mappedBy = "rescuer")
     @JsonIgnore
