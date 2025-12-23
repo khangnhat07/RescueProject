@@ -74,7 +74,7 @@ public class RescueRequestServiceImpl implements RescueRequestService {
     @Override
     public void deleteRescue(Long id) {
         if (!rescueRequestRepository.existsById(id)){
-            throw new NoSuchElementException("User not found");
+            throw new NoSuchElementException("Request is not found");
         }
         rescueRequestRepository.deleteById(id);
     }
