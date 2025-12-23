@@ -31,6 +31,8 @@ const ManageRequestDetail = () => {
                 if (res) {
                     alert("Tiếp nhận thành công! Trạng thái đã chuyển sang Đang xử lý.");
                     await loadDetail(); // Tải lại dữ liệu để cập nhật giao diện (ẩn nút tiếp nhận)
+                } else {
+                    alert(res.message || "Không thể tiếp nhận. ");
                 }
             } catch (error) {
                 console.error("Lỗi tiếp nhận:", error);

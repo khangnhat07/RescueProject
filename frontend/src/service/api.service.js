@@ -53,8 +53,13 @@ const fetchAllRequestByRescuerAPI = () => {
     return axios.get(URL_BACKEND)
 }
 
+const deleteRequestAPI = (id) => {
+    const URL_BACKEND = `/requests/${id}`;
+    return axios.delete(URL_BACKEND);
+}
 
 export {
     fetchAllRequestAPI, CreateRequestAPI, filterStatusRequestAPI, fetchAllRequestByVictimAPI,
-    fetchRequestDetailByIdAPI, acceptRequestAPI, fetchAllRequestByRescuerAPI, cancelAcceptRequestAPI
+    fetchRequestDetailByIdAPI, acceptRequestAPI, fetchAllRequestByRescuerAPI, cancelAcceptRequestAPI,
+    deleteRequestAPI
 }

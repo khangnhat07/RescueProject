@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchRequestDetailByIdAPI } from "../../service/api.service";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { deleteRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { Link } from "react-router-dom";
 import UpdateRequestModal from "./UserUpdateRequest";
 import UpdateRescueRequestModal from "./UserUpdateRequest";
@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 const UserRequestDetail = () => {
     const { id } = useParams();
     const [request, setRequest] = useState(null);
+    const navigate = useNavigate();
     const { user } = useAuth()
 
     // 1. State cho Modal và Form
@@ -41,8 +42,27 @@ const UserRequestDetail = () => {
     };
 
     const handleCancelRequest = async () => {
-        alert("Đã hủy.");
-    }
+        const isConfirm = window.confirm(`Bạn có chắc chắn muốn hủy yêu cầu #${id} không?`);
+
+        if (isConfirm) {
+            try {
+                const res = await deleteRequestAPI(id);
+                console.log("Check kết quả res trả về: ", res);
+
+                if (res && res.data.status === "success") {
+                    alert("Hủy yêu cầu thành công!");
+                    navigate("/user/rescue");
+                } else {
+                    alert(res.message || "Hủy yêu cầu thất bại!");
+                }
+            } catch (error) {
+                console.error("Lỗi xóa:", error);
+                alert("Lỗi kết nối hệ thống.");
+            }
+        }
+    };
+
+
 
 
 
