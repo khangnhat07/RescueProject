@@ -29,7 +29,7 @@ const filterStatusRequestAPI = (status) => {
 }
 
 const fetchAllRequestByVictimAPI = () => {
-    const URL_BACKEND = `/request/my-request`;
+    const URL_BACKEND = `/requests/my-request`;
     return axios.get(URL_BACKEND)
 }
 
@@ -43,13 +43,18 @@ const acceptRequestAPI = (id) => {
     return axios.patch(URL_BACKEND);
 }
 
+const cancelAcceptRequestAPI = (id) => {
+    const URL_BACKEND = `/rescueteam/requests/${id}/cancel`;
+    return axios.patch(URL_BACKEND);
+}
+
 const fetchAllRequestByRescuerAPI = () => {
-    const URL_BACKEND = `/rescueteam/request/my-accept`;
+    const URL_BACKEND = `/rescueteam/requests/my-accept`;
     return axios.get(URL_BACKEND)
 }
 
 
 export {
     fetchAllRequestAPI, CreateRequestAPI, filterStatusRequestAPI, fetchAllRequestByVictimAPI,
-    fetchRequestDetailByIdAPI, acceptRequestAPI, fetchAllRequestByRescuerAPI
+    fetchRequestDetailByIdAPI, acceptRequestAPI, fetchAllRequestByRescuerAPI, cancelAcceptRequestAPI
 }

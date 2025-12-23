@@ -32,11 +32,11 @@ const RescueRequestBody = (props) => {
 
     const getAddressColorClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "text-success"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "text-primary"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "text-danger"; // đỏ
             default:
                 return "text-secondary";

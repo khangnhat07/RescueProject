@@ -4,10 +4,12 @@ import { fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { Link } from "react-router-dom";
 import UpdateRequestModal from "./UserUpdateRequest";
 import UpdateRescueRequestModal from "./UserUpdateRequest";
+import { useAuth } from "../../context/AuthContext";
 
 const UserRequestDetail = () => {
     const { id } = useParams();
     const [request, setRequest] = useState(null);
+    const { user } = useAuth()
 
     // 1. State cho Modal và Form
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -38,12 +40,22 @@ const UserRequestDetail = () => {
 
     };
 
+    const handleCancelRequest = async () => {
+        alert("Đã hủy.");
+    }
 
 
 
     if (!request) {
         return <div>Đang tải...</div>;
     }
+
+    // --- LOGIC KIỂM TRA QUYỀN ---
+    // console.log("Dữ liệu User đang đăng nhập:", user);
+    // console.log("Dữ liệu User đang đăng nhập:", request.victim);
+    const isPostByMe = request.victim && request.victim.email === user?.email;
+    const isPostByOther = request.victim && request.victim.email !== user?.email;
+
     return (
         <>
             {/* Thêm wrapper này nếu muốn căn giữa toàn trang theo chiều dọc */}
@@ -63,14 +75,42 @@ const UserRequestDetail = () => {
                                 </div>
 
                                 <div className="d-flex gap-2">
-                                    <button onClick={() => setShowUpdateModal(true)} className="btn btn-danger rounded-pill px-4 shadow-sm">
-                                        <i class="fa-solid fa-pen-to-square me-2"></i>Cập nhật
+
+
+                                    {/* TH 1: CHÍNH TÔI đã tạo -> Hiện nút Hủy và Cập nhật */}
+                                    {isPostByMe && (
+                                        <>
+                                            <button className="btn btn-danger" onClick={handleCancelRequest}>
+                                                <i className="fa-solid fa-ban me-2"></i>Hủy yêu cầu
+                                            </button>
+                                            <button onClick={() => setShowUpdateModal(true)} className="btn btn-warning">
+                                                <i className="fa-solid fa-pen-to-square me-2"></i>Cập nhật
+                                            </button>
+                                            <Link to={`/user/rescue`}>
+                                                <button className="btn btn-outline-secondary">
+                                                    <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                                                </button>
+                                            </Link>
+                                        </>
+                                    )}
+
+                                    {/* TH 3: NGƯỜI KHÁC tạo ->  không cho bấm gì */}
+                                    {isPostByOther && (
+                                        <Link to={`/user/rescue`}>
+                                            <button className="btn btn-outline-secondary">
+                                                <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                                            </button>
+                                        </Link>
+                                    )}
+
+                                    {/* <button onClick={() => setShowUpdateModal(true)} className="btn btn-danger rounded-pill px-4 shadow-sm">
+                                        <i className="fa-solid fa-pen-to-square me-2"></i>Cập nhật
                                     </button>
                                     <Link to={`/user/rescue`}>
                                         <button className="btn btn-success rounded-pill px-4 shadow-sm">
                                             <i className="fa-solid fa-arrow-left me-2"></i> Trở về
                                         </button>
-                                    </Link>
+                                    </Link> */}
                                 </div>
                             </div>
 

@@ -21,7 +21,7 @@ const ManageFilterRequest = (props) => {
 
     };
 
-    const fetchAllRequestByVictim = async () => {
+    const fetchAllRequestByRescuer = async () => {
         const res = await fetchAllRequestByRescuerAPI();
         console.log("Filter result: ", res.data);
 
@@ -66,7 +66,7 @@ const ManageFilterRequest = (props) => {
                     }}>Tất cả tin báo</button></li>
                 <li className="nav-item"><button className="nav-link"
                     onClick={async () => {
-                        //await fetchAllRequestByVictim();
+                        await fetchAllRequestByRescuer();
                     }}>Tin đã nhận</button></li>
             </ul>
         </>
