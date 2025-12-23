@@ -136,3 +136,8 @@ body {
     background-color: var(--sar-dark);
     color: white;
 }
+
+.get-location-text:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
