@@ -29,44 +29,45 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public Blog createBlog(BlogCreateRequest request) {
+    public Blog createBlog(BlogCreateRequest request, String imageUrl) {
         BlogCategory category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Blog blog = new Blog();
         blog.setTitle(request.getTitle());
         blog.setContent(request.getContent());
+
+        // imageUrl lúc này là link từ Cloudinary (ví dụ: https://res.cloudinary.com/...)
+        blog.setImage(imageUrl);
+
         blog.setCategory(category);
         blog.setPublished(false);
+        // Lưu ý: Nên dùng LocalDateTime để dễ format ở Frontend thay vì ép String ngay
         blog.setTime(LocalDateTime.now().toString());
+
         return blogRepository.save(blog);
     }
 
     @Override
-    public Blog updateBlog(Long id, BlogUpdateRequest request) {
-
+    public Blog updateBlog(Long id, BlogUpdateRequest request, String imageUrl) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
 
-        // update field cơ bản
-        if (request.getTitle() != null) {
-            blog.setTitle(request.getTitle());
+        if (request.getTitle() != null) blog.setTitle(request.getTitle());
+        if (request.getContent() != null) blog.setContent(request.getContent());
+
+        // LOGIC MỚI: Cập nhật URL ảnh từ Cloudinary
+        // Nếu Frontend không gửi ảnh mới, imageUrl sẽ null hoặc giữ link cũ tùy bạn xử lý ở Frontend
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            blog.setImage(imageUrl);
         }
 
-        if (request.getContent() != null) {
-            blog.setContent(request.getContent());
-        }
-
-        // update category nếu có
         if (request.getCategoryId() != null) {
-            BlogCategory category = categoryRepository
-                    .findById(request.getCategoryId())
+            BlogCategory category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
-
             blog.setCategory(category);
         }
 
-        // update publish nếu có
         if (request.getPublished() != null) {
             blog.setPublished(request.getPublished());
         }
@@ -74,6 +75,7 @@ public class BlogServiceImpl implements BlogService {
         return blogRepository.save(blog);
     }
 
+    // --- Các phương thức GET, DELETE, PUBLISH bên dưới giữ nguyên ---
     @Override
     public void deleteBlog(Long id) {
         if (!blogRepository.existsById(id)) {
@@ -97,7 +99,6 @@ public class BlogServiceImpl implements BlogService {
     public Blog publishBlog(Long id, boolean published) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
-
         blog.setPublished(published);
         return blogRepository.save(blog);
     }
@@ -106,6 +107,7 @@ public class BlogServiceImpl implements BlogService {
     public List<Blog> getBlogsByCategory(Long categoryId) {
         return blogRepository.findByCategoryId(categoryId);
     }
+
     @Override
     public List<Blog> getPublishedBlogs() {
         return blogRepository.findByPublishedTrueOrderByTimeDesc();
@@ -124,6 +126,7 @@ public class BlogServiceImpl implements BlogService {
         }
         return blog;
     }
+
     @Override
     public List<Blog> searchPublishedBlogs(Long categoryId, String keyword) {
         return blogRepository.searchPublishedBlogs(categoryId, keyword);

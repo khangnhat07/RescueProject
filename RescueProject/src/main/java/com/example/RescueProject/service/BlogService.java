@@ -1,15 +1,16 @@
 package com.example.RescueProject.service;
 
 import com.example.RescueProject.model.Blog;
-import com.example.RescueProject.model.User;
 import com.example.RescueProject.request.BlogCreateRequest;
 import com.example.RescueProject.request.BlogUpdateRequest;
 
 import java.util.List;
 
 public interface BlogService {
-    Blog createBlog(BlogCreateRequest request);
-    Blog updateBlog(Long id, BlogUpdateRequest request);
+    // Thêm String imageUrl vào hàm create và update
+    Blog createBlog(BlogCreateRequest request, String imageUrl);
+    Blog updateBlog(Long id, BlogUpdateRequest request, String imageUrl);
+
     void deleteBlog(Long id);
     Blog getBlogById(Long id);
     List<Blog> getAllBlogs();
