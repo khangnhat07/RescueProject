@@ -75,7 +75,7 @@ public class RescueRequestUserController {
     }
 
 
-    @GetMapping("/request/my-request")
+    @GetMapping("/requests/my-request")
     public ResponseEntity<ApiResponse<List<RescueRequest>>> findRequestByVictim() {
         List<RescueRequest> rescueRequestList = this.rescueRequestService.findRescueByVictim();
         var result = new ApiResponse<>(HttpStatus.OK,"Get request by current victim",rescueRequestList,null);

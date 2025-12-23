@@ -7,7 +7,6 @@ const ManageRequestBody = (props) => {
         if (window.confirm("Bạn có chắc chắn muốn tiếp nhận ca cứu hộ này không?")) {
             try {
                 const res = await acceptRequestAPI(id);
-                // Tùy vào cấu trúc ApiResponse của bạn, check res.status hoặc res.data
                 if (res) {
                     alert("Tiếp nhận thành công! Hãy di chuyển đến vị trí nạn nhân.");
                     if (loadAllRequest) await loadAllRequest(); // Gọi lại hàm fetch ở component cha
@@ -47,11 +46,11 @@ const ManageRequestBody = (props) => {
 
     const getAddressColorClass = (status) => {
         switch (status) {
-            case "Hoàn thành":
+            case "COMPLETE":
                 return "text-success"; // xanh lá
-            case "Đội cứu hộ đang đến":
+            case "IN_PROCESS":
                 return "text-primary"; // xanh biển
-            case "Đang chờ tiếp nhận":
+            case "WAITING_ACCEPT":
                 return "text-danger"; // đỏ
             default:
                 return "text-secondary";

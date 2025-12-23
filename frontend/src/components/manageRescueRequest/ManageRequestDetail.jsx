@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { acceptRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
+import { acceptRequestAPI, cancelAcceptRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { useAuth } from '../../context/AuthContext';
+import { Link } from "react-router-dom";
 
 const ManageRequestDetail = () => {
     const { id } = useParams();
@@ -39,14 +40,35 @@ const ManageRequestDetail = () => {
             }
         }
     };
+
+    const handleCancelRequest = async () => {
+        if (window.confirm(`Bạn xác nhận hủy tiếp nhận cứu hộ cho yêu cầu #${id}?`)) {
+            setIsSubmitting(true);
+            try {
+                const res = await cancelAcceptRequestAPI(id);
+                if (res) {
+                    alert("Hủy tiếp nhận thành công! Trạng thái đã chuyển sang Đang chờ.");
+                    await loadDetail(); // Tải lại dữ liệu để cập nhật giao diện (hiện nút tiếp nhận)
+                }
+            } catch (error) {
+                console.error("Lỗi hủy:", error);
+                alert("Không thể hủy.");
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+    };
+
+
     if (!request) {
         return <div>Đang tải...</div>;
     }
 
     // --- LOGIC KIỂM TRA QUYỀN ---
+    // console.log("Dữ liệu User đang đăng nhập:", user);
     const isWaiting = request.status === "WAITING_ACCEPT";
-    const isProcessedByMe = request.rescuer && request.rescuer.id === user.id;
-    const isProcessedByOther = request.rescuer && request.rescuer.id !== user.id;
+    const isProcessedByMe = request.rescuer && request.rescuer.email === user?.email;
+    const isProcessedByOther = request.rescuer && request.rescuer.email !== user?.email;
 
 
     return (
@@ -65,32 +87,50 @@ const ManageRequestDetail = () => {
 
                     </div>
 
-                    <div className="mt-2 mt-md-0">
+                    <div className="d-flex gap-2">
                         {/* TH 1: Chưa có ai nhận */}
                         {isWaiting && (
-                            <button className="btn btn-success" onClick={handleAcceptRequest}>
-                                <i className="fas fa-check-circle me-1"></i> Tiếp nhận cứu hộ
-                            </button>
+                            <>
+                                <button className="btn btn-success me-2" onClick={handleAcceptRequest}>
+                                    <i className="fas fa-check-circle me-1"></i> Tiếp nhận cứu hộ
+                                </button>
+                                <Link to={`/rescuer/rescue`}>
+                                    <button className="btn btn-outline-secondary me-2">
+                                        <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                                    </button>
+                                </Link>
+                            </>
                         )}
 
                         {/* TH 2: CHÍNH TÔI đã nhận -> Hiện nút Hủy và Cập nhật */}
                         {isProcessedByMe && (
                             <>
                                 <button className="btn btn-danger me-2" onClick={handleCancelRequest}>
-                                    <i className="fas fa-undo me-1"></i> Hủy tiếp nhận
+                                    <i className="fa-solid fa-ban me-2"></i>Hủy xử lý
                                 </button>
-                                <button className="btn btn-dark" disabled>
-                                    <i className="fas fa-user-check me-1"></i> Bạn đang xử lý
+                                <button className="btn btn-dark me-2" disabled>
+                                    <i className="fas fa-user-check me-2"></i>Bạn đang xử lý
                                 </button>
+                                <Link to={`/rescuer/rescue`}>
+                                    <button className="btn btn-outline-secondary me-2">
+                                        <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                                    </button>
+                                </Link>
                             </>
                         )}
-
                         {/* TH 3: NGƯỜI KHÁC đã nhận -> Chỉ hiện thông báo, không cho bấm gì */}
                         {isProcessedByOther && (
-                            <div className="alert alert-warning mb-0 py-2">
-                                <i className="fas fa-info-circle me-2"></i>
-                                Nhân viên <strong>{request.rescuer.username}</strong> đang xử lý ca này
-                            </div>
+                            <>
+                                <div className="alert alert-warning mb-0 py-2 ">
+                                    <i className="fas fa-info-circle me-2"></i>
+                                    Nhân viên <strong>{request.rescuer.username}</strong> đang xử lý ca này
+                                </div>
+                                <Link to={`/rescuer/rescue`}>
+                                    <button className="btn btn-outline-secondary">
+                                        <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                                    </button>
+                                </Link>
+                            </>
                         )}
                     </div>
                 </div>

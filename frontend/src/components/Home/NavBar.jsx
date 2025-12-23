@@ -27,10 +27,10 @@ const Navbar = () => {
         <div className="container">
           {/* Use Link instead of a tag for the Brand */}
           <Link className="navbar-brand fw-bolder d-flex align-items-center" to="/">
-            <span className="bg-white text-danger rounded-circle d-flex align-items-center justify-content-center me-2" style={{width: '40px', height: '40px'}}>
+            <span className="bg-white text-danger rounded-circle d-flex align-items-center justify-content-center me-2" style={{ width: '40px', height: '40px' }}>
               <i className="fas fa-star-of-life fa-lg"></i>
             </span>
-            SAR VIETNAM
+            KKT VIETNAM
           </Link>
 
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -39,28 +39,28 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse" id="mainNav">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 fw-medium align-items-center">
-              
+
               <li className="nav-item"><Link className="nav-link active" to="/">Trang chủ</Link></li>
               <li className="nav-item"><a className="nav-link" href="#live-map">Bản đồ số</a></li>
               <li className="nav-item"><a className="nav-link" href="#resources">Nguồn lực</a></li>
 
               {/* --- CONDITIONAL RENDERING AREA --- */}
               <li className="nav-item ms-lg-3">
-                
+
                 {user ? (
                   // SITUATION 1: USER IS LOGGED IN -> Show Dropdown
                   <div className="dropdown">
-                    <button 
-                      className="btn btn-outline-light rounded-pill dropdown-toggle d-flex align-items-center gap-2" 
-                      type="button" 
-                      data-bs-toggle="dropdown" 
+                    <button
+                      className="btn btn-outline-light rounded-pill dropdown-toggle d-flex align-items-center gap-2"
+                      type="button"
+                      data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
                       {/* Avatar Icon */}
-                      <div className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style={{width: '25px', height: '25px', fontSize: '12px'}}>
+                      <div className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: '25px', height: '25px', fontSize: '12px' }}>
                         <i className="fas fa-user"></i>
                       </div>
-                      
+
                       {/* Display Email or Username */}
                       <span className="small">
                         {user.email?.split('@')[0] || "Member"}
@@ -73,12 +73,12 @@ const Navbar = () => {
                         <span className="badge bg-secondary w-100">{user.role || 'USER'}</span>
                       </li>
                       <li><hr className="dropdown-divider" /></li>
-                      
+
                       <li><Link className="dropdown-item" to="/profile"><i className="fas fa-id-card me-2 text-muted"></i>Hồ sơ cá nhân</Link></li>
                       <li><Link className="dropdown-item" to="/history"><i className="fas fa-history me-2 text-muted"></i>Lịch sử hoạt động</Link></li>
-                      
+
                       <li><hr className="dropdown-divider" /></li>
-                      
+
                       {/* Logout Button */}
                       <li>
                         <button className="dropdown-item text-danger fw-bold" onClick={handleLogout}>
@@ -90,9 +90,9 @@ const Navbar = () => {
 
                 ) : (
                   // SITUATION 2: GUEST (NOT LOGGED IN) -> Show Login Button
-                  <button 
-                    className="btn btn-outline-light px-4 rounded-pill" 
-                    data-bs-toggle="modal" 
+                  <button
+                    className="btn btn-outline-light px-4 rounded-pill"
+                    data-bs-toggle="modal"
                     data-bs-target="#loginModal"
                   >
                     <i className="fas fa-user-astronaut me-2"></i>Thành viên
