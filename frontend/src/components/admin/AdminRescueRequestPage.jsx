@@ -24,7 +24,8 @@ const AdminRescueRequestPage = () => {
     return (
         <>
             <div>Admin Rescue Request Page</div>
-            <AdminListRequest dataRequest={dataRequest} />
+            <AdminListRequest dataRequest={dataRequest}
+                loadAllRequest={loadAllRequest} />
         </>
     )
 

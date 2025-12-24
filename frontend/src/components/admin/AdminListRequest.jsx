@@ -1,8 +1,9 @@
+import { deleteRequestAPI } from "../../service/api.service";
 import "./adminRescue.css";
 import { Link } from "react-router-dom";
 const AdminListRequest = (props) => {
 
-    const { dataRequest } = props;
+    const { dataRequest, loadAllRequest } = props;
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -14,6 +15,28 @@ const AdminListRequest = (props) => {
                 return "status-badge st-waiting"; // đỏ
             default:
                 return "status-badge st-waiting";
+        }
+    };
+
+    const deleteRequest = async (id) => {
+        const isConfirm = window.confirm(`Bạn có chắc chắn muốn hủy yêu cầu #${id} không?`);
+
+        if (isConfirm) {
+            try {
+                const res = await deleteRequestAPI(id);
+                console.log("Check kết quả res trả về: ", res);
+
+                if (res && res.data.status === "success") {
+                    alert("Hủy yêu cầu thành công!");
+                    loadAllRequest();
+
+                } else {
+                    alert(res.message || "Hủy yêu cầu thất bại!");
+                }
+            } catch (error) {
+                console.error("Lỗi xóa:", error);
+                alert("Lỗi kết nối hệ thống.");
+            }
         }
     };
 
@@ -158,7 +181,9 @@ const AdminListRequest = (props) => {
                                                     <i className="fas fa-eye me-1"></i> Xem
                                                 </button>
                                             </Link>
-                                            <button className="btn btn-sm btn-outline-danger rounded-pill ms-1" title="Xóa tin rác">
+                                            <button className="btn btn-sm btn-outline-danger rounded-pill ms-1"
+                                                title="Xóa tin rác"
+                                                onClick={() => deleteRequest(item.id)}>
                                                 <i className="fas fa-trash"></i>
                                             </button>
                                         </td>
