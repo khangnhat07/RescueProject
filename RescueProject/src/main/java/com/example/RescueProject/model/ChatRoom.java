@@ -1,6 +1,5 @@
 package com.example.RescueProject.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 

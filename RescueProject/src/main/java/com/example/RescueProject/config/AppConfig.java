@@ -1,68 +1,90 @@
 package com.example.RescueProject.config;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-public class AppConfig implements WebMvcConfigurer {
-
+public class AppConfig {
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // 1. Tắt CSRF vì chúng ta dùng API (JWT/Stateless)
-                .csrf(csrf -> csrf.disable())
-
-                // 2. Kích hoạt CORS với cấu hình bên dưới
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-                // 3. Phân quyền
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Cho phép các yêu cầu OPTIONS (Pre-flight request) đi qua hết
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/blogs/**").permitAll()
+                        // 1. PUBLIC ENDPOINTS (Cho phép truy cập không cần token)
+                        // Cho phép WebSocket bắt tay
+                        .requestMatchers("/ws/**").permitAll()
 
-                        // Tạm thời cho phép tất cả admin blogs (để test)
-                        .requestMatchers("/admin/blogs/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/admin/blogs/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+                        .requestMatchers("/auth/**").permitAll()
+
+                        // ƯU TIÊN 2: Phân quyền cho Admin và Đội cứu hộ
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/rescueteam/**").hasAnyRole("RESCUETEAM", "ADMIN")
+
+                        // ƯU TIÊN 3: Các API khác (ví dụ /api/...) yêu cầu phải đăng nhập
+                        .requestMatchers("/api/**").authenticated()
+
+                        // CÁC TRƯỜNG HỢP CÒN LẠI
+
+
+                        .requestMatchers("/api/chat/**").permitAll()
+
+                        .anyRequest().permitAll())
+                // Filter validator token
+                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
 
-    // Cấu hình CORS chi tiết
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
+        CorsConfiguration cfg = new CorsConfiguration();
+        cfg.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "https://zosh-food.vercel.app",
+                "http://localhost:4200",
+                "https://food-frontend-mbls.onrender.com" // thêm domain frontend mới
+        ));
+        cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        cfg.setAllowedHeaders(Collections.singletonList("*"));
+        cfg.setExposedHeaders(Collections.singletonList("Authorization"));
+        cfg.setAllowCredentials(true);
+        cfg.setMaxAge(3600L);
 
-        // Cho phép origin của React
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
-
-        // Cho phép các phương thức phổ biến
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-
-        // QUAN TRỌNG: Cho phép các Header này để không bị 403 khi gửi FormData
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
-
-        config.setAllowCredentials(true);
-        config.setExposedHeaders(List.of("Authorization"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cfg);
         return source;
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

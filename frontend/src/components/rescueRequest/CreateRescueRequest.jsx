@@ -1,17 +1,18 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./rescue.css"
 import { CreateRequestAPI } from "../../service/api.service";
+import useDebounce from "../../hook/useDebounce";
 
 const CreateRescueRequest = (props) => {
 
     const { loadAllRequest } = props;
-    const victimId = 1;
     const [address, setAddress] = useState("");
     const [detail, setDetail] = useState("");
-    const status = "Đang chờ tiếp nhận";
     const [typeId, setTypeId] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const debouncedAddress = useDebounce(address, 500);
 
     const getCurrentDateTimeString = () => {
         const now = new Date();
@@ -34,7 +35,7 @@ const CreateRescueRequest = (props) => {
 
     const hanldeBtnCreate = async () => {
         const timeCreated = getCurrentDateTimeString();
-        const res = await CreateRequestAPI(victimId, address, detail, status, timeCreated, typeId)
+        const res = await CreateRequestAPI(address, detail, timeCreated, typeId)
         if (res.data) {
             alert("Tạo yêu cầu cứu hộ thành công!");
             resetInput();
@@ -44,6 +45,60 @@ const CreateRescueRequest = (props) => {
         }
         console.log("check res: ", res)
     }
+    const getMyLocation = () => {
+        if (!navigator.geolocation) {
+            alert("Trình duyệt không hỗ trợ định vị");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+
+                try {
+                    const res = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                    );
+                    const data = await res.json();
+
+                    if (data && data.display_name) {
+                        setAddress(data.display_name);
+                    } else {
+                        alert("Không tìm được địa chỉ");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("Lỗi khi lấy địa chỉ");
+                }
+            },
+            (error) => {
+                alert("Không thể lấy vị trí của bạn");
+                console.error(error);
+            }
+        );
+    };
+
+
+    useEffect(() => {
+        if (!debouncedAddress || debouncedAddress.length < 3) {
+            setSuggestions([]);
+            return;
+        }
+
+        const fetchSuggestions = async () => {
+            try {
+                const res = await fetch(
+                    `https://nominatim.openstreetmap.org/search?format=json&q=${debouncedAddress}&countrycodes=vn&addressdetails=1&limit=5`
+                );
+                const data = await res.json();
+                setSuggestions(data);
+            } catch (error) {
+                console.error("Lỗi gợi ý địa chỉ", error);
+            }
+        };
+
+        fetchSuggestions();
+    }, [debouncedAddress]);
 
     return (
 
@@ -69,7 +124,32 @@ const CreateRescueRequest = (props) => {
                                 </button>
                                 <input type="text" className="form-control" placeholder="Tọa độ hoặc địa chỉ..."
                                     value={address}
-                                    onChange={(event) => { setAddress(event.target.value) }} />
+                                    onChange={(e) => setAddress(e.target.value)} />
+                            </div>
+                            {suggestions.length > 0 && (
+                                <ul className="list-group position-absolute w-100 shadow-sm z-3">
+                                    {suggestions.map((item) => (
+                                        <li
+                                            key={item.place_id}
+                                            className="list-group-item list-group-item-action"
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                                setAddress(item.display_name);
+                                                setSuggestions([]);
+                                            }}
+                                        >
+                                            {item.display_name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            <div
+                                className="get-location-text text-danger small fw-bold mt-1"
+                                style={{ cursor: "pointer", width: "fit-content" }}
+                                onClick={getMyLocation}
+                            >
+                                <i className="fas fa-location-crosshairs me-1"></i>
+                                Lấy vị trí của tôi
                             </div>
 
                             <label className="form-label fw-bold small text-secondary">LOẠI CỨU HỘ</label>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5454/admin/blogs";
+const BASE_URL = "http://localhost:5454/blogs/blogAdmin";
 
 // GET ALL BLOGS
 export const getAllBlogs = () => {

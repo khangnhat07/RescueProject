@@ -15,24 +15,26 @@ public class RescueRequest {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="victim_id")
+    @JoinColumn(name = "victim_id")
     private User victim;
 
     @ManyToOne
-    @JoinColumn(name="rescuer_id")
+    @JoinColumn(name = "rescuer_id")
     private User rescuer;
 
     @ManyToOne
-    @JoinColumn(name="type_id")
+    @JoinColumn(name = "type_id")
     private TypeRequest type;
 
     private String address;
 
     private String detail;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
 
     private String image;
 
     private String datetime;
+
 }

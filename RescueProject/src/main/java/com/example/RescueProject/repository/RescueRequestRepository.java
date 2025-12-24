@@ -1,5 +1,6 @@
 package com.example.RescueProject.repository;
 
+import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
 import com.example.RescueProject.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,6 @@ import java.util.List;
 public interface RescueRequestRepository extends JpaRepository<RescueRequest, Long> {
     List<RescueRequest> findByVictimId(Long victimId);
     List<RescueRequest> findByRescuerId(Long rescuerId);
-    List<RescueRequest> findByVictimIdAndRescuerIsNotNull(Long victimId);
+
+    List<RescueRequest> findByStatus(EStatus status);
 }

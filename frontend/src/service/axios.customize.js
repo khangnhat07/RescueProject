@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8000'
+    baseURL: 'http://localhost:5454'
 });
 
 instance.interceptors.request.use(function (config) {
@@ -23,5 +23,15 @@ instance.interceptors.response.use(function (response) {
     // Do something with response error
     if (error.response && error.response.data) return error.response.data;
     return Promise.reject(error);
+});
+
+instance.interceptors.request.use((config) => {
+    // Lấy token đúng cái tên đã lưu ở AuthContext
+    const token = localStorage.getItem('jwt');
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
 });
 export default instance

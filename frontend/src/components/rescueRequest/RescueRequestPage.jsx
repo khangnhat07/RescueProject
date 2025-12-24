@@ -29,7 +29,7 @@ const RescueRequestPage = () => {
         <>
             <header className="page-header">
                 <div className="container position-relative z-2">
-                    <div claclassNamess="row align-items-center">
+                    <div className="row align-items-center">
                         <div className="col-lg-8">
                             <h1 className="fw-bolder display-5 mb-0">Cộng Đồng Cứu Trợ</h1>
                             <p className="text-white-50 mt-2 mb-0 lead">Kết nối người gặp nạn và các đội cứu hộ tình nguyện trên toàn quốc.</p>

@@ -5,11 +5,12 @@ import com.example.RescueProject.response.ApiResponse;
 import com.example.RescueProject.service.RescueRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/requests/rescuer")
+@RequestMapping("rescueteam/requests/")
 public class RescueRequestRescuerController {
     private RescueRequestService rescueRequestService;
 
@@ -28,5 +29,34 @@ public class RescueRequestRescuerController {
     public ResponseEntity<ApiResponse<RescueRequest>> updateRescueStatus(@PathVariable long id, @RequestBody RescueRequest rescueRequest){
         var result = new ApiResponse<>(HttpStatus.OK,"Update Resuce Status",rescueRequestService.updateRescueByRescuer(id,rescueRequest),null);
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/my-accept")
+    public ResponseEntity<ApiResponse<List<RescueRequest>>> findRequestByRescuer(){
+        List<RescueRequest> rescueRequests = this.rescueRequestService.findRescueByRescuer();
+        var result = new ApiResponse<>(HttpStatus.OK,"Find Request By Rescuer", rescueRequests,null);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PatchMapping("/{id}/accept")
+    @PreAuthorize("hasRole('RESCUETEAM')")
+    public ResponseEntity<?> acceptRescue(@PathVariable Long id) {
+        try {
+            RescueRequest updated = rescueRequestService.acceptRequest(id);
+            return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Đã tiếp nhận yêu cầu", updated, null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/cancel")
+    @PreAuthorize("hasRole('RESCUETEAM')")
+    public ResponseEntity<?> cancelRescue(@PathVariable Long id){
+        try{
+            RescueRequest updated = rescueRequestService.cancelRequest(id);
+            return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,"Đã hủy yêu cầu",updated,null));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

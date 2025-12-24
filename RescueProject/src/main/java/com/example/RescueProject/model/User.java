@@ -1,32 +1,42 @@
 package com.example.RescueProject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;  // Upgrade date từ String
+import java.time.LocalDateTime; // Upgrade date từ String
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-public class User {  // Giữ abstract
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private EUserRole role;
-    private String username;
+
+    private String username; // dùng để login
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    // bcrypt
+    private String email;
     private String phone;
-    private String address;
-    private boolean active = true;
+    private String date;
+    private boolean isActive;
+    @Enumerated(EnumType.STRING)
+    private EUserRole role; // ROLE_VICTIM, ROLE_RESCUETEAM, ROLE_ADMIN
+
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
     @OneToMany(mappedBy = "victim")
     @JsonIgnore
     List<RescueRequest> rescueRequests;
-
 
     @OneToMany(mappedBy = "rescuer")
     @JsonIgnore

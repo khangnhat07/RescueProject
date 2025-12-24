@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.List;
 
-
 @Data
 @Entity
 public class TypeRequest {
@@ -19,4 +18,5 @@ public class TypeRequest {
     @OneToMany(mappedBy = "type")
     @JsonIgnore
     List<RescueRequest> rescueRequests;
+
 }

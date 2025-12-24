@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchAllRequestByVictimIdAPI, filterStatusRequestAPI } from "../../service/api.service";
+import { fetchAllRequestByVictimAPI, filterStatusRequestAPI } from "../../service/api.service";
 
 const FilterRescueRequest = (props) => {
 
@@ -20,8 +20,8 @@ const FilterRescueRequest = (props) => {
 
     };
 
-    const fetchAllRequestByVictim = async (id) => {
-        const res = await fetchAllRequestByVictimIdAPI(id);
+    const fetchAllRequestByVictim = async () => {
+        const res = await fetchAllRequestByVictimAPI();
         console.log("Filter result: ", res.data);
 
         setDataRequest(res.data);
@@ -44,9 +44,9 @@ const FilterRescueRequest = (props) => {
                                 value={statusFilter}
                                 onChange={(event) => handleFilter(event.target.value)}>
                                 <option value="">Tất cả trạng thái</option>
-                                <option value="Đang chờ tiếp nhận" className="text-danger fw-bold">Đang chờ cứu</option>
-                                <option value="Đội cứu hộ đang đến" className="text-primary fw-bold">Đang xử lý</option>
-                                <option value="Hoàn thành" className="text-success fw-bold">Đã an toàn</option>
+                                <option value="WAITING_ACCEPT" className="text-danger fw-bold">Đang chờ cứu</option>
+                                <option value="IN_PROCESS" className="text-primary fw-bold">Đang xử lý</option>
+                                <option value="COMPLETE" className="text-success fw-bold">Đã an toàn</option>
                             </select>
                         </div>
 
@@ -65,8 +65,7 @@ const FilterRescueRequest = (props) => {
                     }}>Tất cả tin báo</button></li>
                 <li className="nav-item"><button className="nav-link"
                     onClick={async () => {
-                        // Example victim ID = 2
-                        await fetchAllRequestByVictim(2);
+                        await fetchAllRequestByVictim();
                     }}>Tin của tôi</button></li>
             </ul>
         </>

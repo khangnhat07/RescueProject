@@ -1,10 +1,9 @@
 // src/pages/Blog.jsx
 import React, { useState, useEffect } from "react";
-import Navbar from '../Navbar/Navbar';
+
 import Hero from "../Blog/Hero";
 import NewsList from "../Blog/NewsList";
 import Sidebar from "../Sidebar/Siderbar";
-import Footer from "../Footer/Footer";
 import { api } from "../config/api";
 
 const Blog = () => {
@@ -52,7 +51,6 @@ const Blog = () => {
 
   return (
     <div>
-      <Navbar />
       <Hero />
       <div className="container pb-5 mt-4">
         <div className="row g-4">
@@ -71,7 +69,6 @@ const Blog = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

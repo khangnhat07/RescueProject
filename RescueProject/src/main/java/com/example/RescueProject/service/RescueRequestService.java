@@ -1,5 +1,6 @@
 package com.example.RescueProject.service;
 
+import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
 
 import java.util.List;
@@ -13,4 +14,9 @@ public interface RescueRequestService {
     List<RescueRequest> findRescueByVictimId(Long id);
     List<RescueRequest> findRescueByRescuerId(Long id);
     RescueRequest updateRescueByRescuer(Long id, RescueRequest rescueRequest);
+    List<RescueRequest> findByStatus(EStatus status);
+    List<RescueRequest> findRescueByVictim();
+    List<RescueRequest> findRescueByRescuer();
+    RescueRequest acceptRequest(Long id);
+    RescueRequest cancelRequest(Long id);
 }

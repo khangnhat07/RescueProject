@@ -4,7 +4,7 @@ import AdminSidebar from './AdminSidebar';
 import AdminNavbar from './AdminNavbar';
 import '../../assets/css/Admin.css';
 
-const Layout = () => { // 2. Không cần nhận props children nữa
+const AdminLayout = () => { // 2. Không cần nhận props children nữa
   const [isToggled, setIsToggled] = useState(false);
 
   return (
@@ -26,4 +26,4 @@ const Layout = () => { // 2. Không cần nhận props children nữa
   );
 };
 
-export default Layout;
+export default AdminLayout;
