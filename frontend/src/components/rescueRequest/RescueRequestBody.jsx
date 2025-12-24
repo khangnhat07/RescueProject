@@ -47,7 +47,7 @@ const RescueRequestBody = (props) => {
     return (
         <>
             <div className="case-feed">
-                {dataRequest.map((item, index) => (
+                {dataRequest && dataRequest.map((item, index) => (
                     <div key={index} className="feed-card p-4">
                         <div className="d-flex justify-content-between align-items-start mb-3">
                             <div className="d-flex align-items-center">

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchRequestDetailByIdAPI } from "../../service/api.service";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { deleteRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { Link } from "react-router-dom";
-import UpdateRequestModal from "./UserUpdateRequest";
+
 import UpdateRescueRequestModal from "./UserUpdateRequest";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const UserRequestDetail = () => {
     const { id } = useParams();
@@ -46,9 +45,25 @@ const UserRequestDetail = () => {
     };
 
     const handleCancelRequest = async () => {
-        alert("Đã hủy.");
-    }
+        const isConfirm = window.confirm(`Bạn có chắc chắn muốn hủy yêu cầu #${id} không?`);
 
+        if (isConfirm) {
+            try {
+                const res = await deleteRequestAPI(id);
+                console.log("Check kết quả res trả về: ", res);
+
+                if (res && res.data.status === "success") {
+                    alert("Hủy yêu cầu thành công!");
+                    navigate("/user/rescue");
+                } else {
+                    alert(res.message || "Hủy yêu cầu thất bại!");
+                }
+            } catch (error) {
+                console.error("Lỗi xóa:", error);
+                alert("Lỗi kết nối hệ thống.");
+            }
+        }
+    };
 
 
     if (!request) {
@@ -80,10 +95,10 @@ const UserRequestDetail = () => {
                                 </div>
 
                                 <div className="d-flex gap-2">
-                                {/* NÚT NHẮN TIN - Hiển thị cho cả 2 trường hợp để trao đổi */}
-                                <button className="btn btn-primary" onClick={handleChat}>
-                                                <i className="fa-solid fa-comment-dots me-2"></i>Nhắn tin
-                                </button>                                    
+                                    {/* NÚT NHẮN TIN - Hiển thị cho cả 2 trường hợp để trao đổi */}
+                                    <button className="btn btn-primary" onClick={handleChat}>
+                                        <i className="fa-solid fa-comment-dots me-2"></i>Nhắn tin
+                                    </button>
 
 
                                     {/* TH 1: CHÍNH TÔI đã tạo -> Hiện nút Hủy và Cập nhật */}

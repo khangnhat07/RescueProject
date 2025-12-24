@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { updateRequestAPI } from "../../service/api.service";
 
 const UpdateRescueRequestModal = (props) => {
     // Các props nhận từ component cha
@@ -15,6 +16,26 @@ const UpdateRescueRequestModal = (props) => {
             setTypeId(data.type?.id || "");
         }
     }, [data, show]);
+
+    const handleUpdateRequest = async () => {
+        try {
+            const res = await updateRequestAPI(data.id, address, detail, typeId);
+            console.log("check res update:", res);
+            if (res && res.status === "success") {
+                alert("Cập nhật thông tin thành công!");
+                handleClose(); // Đóng modal
+
+            } else {
+                alert("Có lỗi xảy ra khi cập nhật.");
+            }
+
+        } catch (error) {
+            console.error("Lỗi update:", error);
+            alert("Lỗi kết nối server.");
+        }
+
+        handleClose();
+    }
 
     if (!show) return null;
 
@@ -111,7 +132,7 @@ const UpdateRescueRequestModal = (props) => {
                                         <button
                                             type="button"
                                             className="btn btn-danger w-100 py-2 fw-bold rounded-pill shadow-sm hover-scale"
-                                            onClick={() => alert("Chức năng cập nhật đã được kích hoạt!")}
+                                            onClick={handleUpdateRequest}
                                         >
                                             <i className="fas fa-save me-2"></i>
                                             LƯU THÔNG TIN
