@@ -5,11 +5,16 @@ import { Link } from "react-router-dom";
 import UpdateRequestModal from "./UserUpdateRequest";
 import UpdateRescueRequestModal from "./UserUpdateRequest";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const UserRequestDetail = () => {
     const { id } = useParams();
     const [request, setRequest] = useState(null);
+    const navigate = useNavigate()
     const { user } = useAuth()
+    const handleChat = () => {
+        navigate(`/chat/${id}`);
+    };
 
     // 1. State cho Modal và Form
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -75,6 +80,10 @@ const UserRequestDetail = () => {
                                 </div>
 
                                 <div className="d-flex gap-2">
+                                {/* NÚT NHẮN TIN - Hiển thị cho cả 2 trường hợp để trao đổi */}
+                                <button className="btn btn-primary" onClick={handleChat}>
+                                                <i className="fa-solid fa-comment-dots me-2"></i>Nhắn tin
+                                </button>                                    
 
 
                                     {/* TH 1: CHÍNH TÔI đã tạo -> Hiện nút Hủy và Cập nhật */}

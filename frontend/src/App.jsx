@@ -75,7 +75,7 @@ function App() {
           element: <AdminRequestDetail />
         },
         {
-          path: "/chat",
+          path: "/chat/:roomId",
           element: <ChatPage />
         },
       ],

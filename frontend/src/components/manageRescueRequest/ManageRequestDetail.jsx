@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { acceptRequestAPI, cancelAcceptRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { useAuth } from '../../context/AuthContext';
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const ManageRequestDetail = () => {
     const { id } = useParams();
@@ -10,6 +11,12 @@ const ManageRequestDetail = () => {
     const { user } = useAuth()
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
+
+    // Hàm xử lý khi bấm nút Chat
+    const handleChatClick = () => {
+        navigate(`/chat/${id}`); 
+    };
 
     useEffect(() => {
         loadDetail();
@@ -205,8 +212,8 @@ const ManageRequestDetail = () => {
                                     <a href="tel:0901234567" className="btn btn-primary">
                                         <i className="fas fa-phone-alt me-2"></i>Gọi điện ({request.victim.phone})
                                     </a>
-                                    <button className="btn btn-outline-secondary">
-                                        <i className="fas fa-comment-alt me-2"></i>Nhắn tin
+                                    <button className="btn btn-outline-secondary" onClick={handleChatClick}>
+                                        <i className="fas fa-comment-alt me-2" ></i>Nhắn tin
                                     </button>
                                 </div>
                             </div>

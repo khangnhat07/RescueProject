@@ -1,101 +1,133 @@
+/* Container tổng bao trùm toàn bộ để căn giữa */
+.chat-page-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    background: #36393f; /* Màu nền Discord */
+}
+
+/* Khung chat chính */
 .chat-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
+    display: flex;
+    width: 95%;
+    max-width: 1200px;
+    height: calc(100vh - 180px); /* Tự động tính toán để không bị đẩy quá Footer */
+    background-color: #36393f;
     border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* SIDEBAR (Danh sách thành viên) */
+.chat-sidebar {
+    width: 240px;
+    background-color: #2f3136;
     display: flex;
     flex-direction: column;
-    height: 80vh; /* Chiều cao cố định */
-    background: #fff;
+    flex-shrink: 0;
+    color: #8e9297;
+}
+
+.sidebar-header {
+    padding: 15px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #fff;
+    border-bottom: 1px solid #26272d;
+}
+
+.user-list {
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-item:hover { background: #393c43; color: #fff; }
+
+.online-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* KHUNG CHAT CHÍNH */
+.chat-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #36393f;
 }
 
 .chat-header {
-    padding: 15px;
-    background: #007bff;
-    color: white;
-    border-radius: 8px 8px 0 0;
-}
-
-.chat-window {
-    flex: 1;
-    overflow-y: auto; /* Cho phép cuộn dọc */
-    padding: 20px;
-    background: #f1f2f6;
+    height: 50px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: #36393f;
+    border-bottom: 1px solid #26272d;
+    color: #fff;
 }
 
-.message-row {
-    display: flex;
-    width: 100%;
-}
+.hashtag { color: #72767d; margin-right: 5px; font-size: 20px; }
 
-/* Tin nhắn của TÔI: Nằm bên Phải */
-.my-message {
-    justify-content: flex-end;
-}
-
-.my-message .message-bubble {
-    background: #007bff;
-    color: white;
-    border-bottom-right-radius: 0;
-}
-
-/* Tin nhắn người KHÁC: Nằm bên Trái */
-.other-message {
-    justify-content: flex-start;
-}
-
-.other-message .message-bubble {
-    background: #e4e6eb;
-    color: black;
-    border-bottom-left-radius: 0;
-}
-
-.message-bubble {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 18px;
-    position: relative;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.message-sender {
-    font-size: 0.75rem;
-    font-weight: bold;
-    margin-bottom: 2px;
-    opacity: 0.8;
-}
-
-.message-time {
-    font-size: 0.65rem;
-    text-align: right;
-    margin-top: 5px;
-    opacity: 0.7;
-}
-
-.chat-input-area {
-    padding: 15px;
-    border-top: 1px solid #ddd;
-    display: flex;
-    gap: 10px;
-}
-
-.chat-input-area input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    outline: none;
-}
-
-.chat-input-area button {
-    padding: 10px 20px;
-    border-radius: 20px;
-    background: #007bff;
-    color: white;
+.header-icons .icon-btn {
+    background: none;
     border: none;
+    color: #b9bbbe;
+    margin-left: 15px;
     cursor: pointer;
+}
+
+/* VÙNG TIN NHẮN */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.discord-message {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.msg-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.msg-username { font-weight: bold; color: #fff; margin-right: 8px; }
+.msg-timestamp { font-size: 11px; color: #72767d; }
+.msg-text { color: #dcddde; margin-top: 2px; }
+
+/* Ô NHẬP TIN NHẮN */
+.chat-input-container {
+    padding: 0 20px 20px;
+}
+
+.chat-input-wrapper {
+    background: #40444b;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+}
+
+.chat-input-field {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #dcddde;
+    outline: none;
 }
