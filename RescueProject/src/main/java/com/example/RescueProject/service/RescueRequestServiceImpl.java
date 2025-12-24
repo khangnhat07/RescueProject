@@ -57,14 +57,19 @@ public class RescueRequestServiceImpl implements RescueRequestService {
 
     @Override
     public RescueRequest updateRescue(Long id, RescueRequest rescueRequest) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<RescueRequest> rescuePre = rescueRequestRepository.findById(id);
         if (rescuePre.isPresent()){
             RescueRequest newRescue = rescuePre.get();
-            newRescue.setAddress(rescueRequest.getAddress());
-            newRescue.setDetail(rescueRequest.getDetail());
-            newRescue.setImage(rescueRequest.getImage());
-            newRescue.setType(rescueRequest.getType());
-            return rescueRequestRepository.save(newRescue);
+            if (newRescue.getVictim() != null && newRescue.getVictim().getEmail().equals(email)){
+                newRescue.setAddress(rescueRequest.getAddress());
+                newRescue.setDetail(rescueRequest.getDetail());
+                newRescue.setImage(rescueRequest.getImage());
+                newRescue.setType(rescueRequest.getType());
+                return rescueRequestRepository.save(newRescue);
+            }else {
+                throw new RuntimeException("Bạn không có quyền hủy yêu cầu của người khác!");
+            }
         }
         else {
             throw  new IllegalArgumentException("Not found rescue request");
@@ -74,7 +79,7 @@ public class RescueRequestServiceImpl implements RescueRequestService {
     @Override
     public void deleteRescue(Long id) {
         if (!rescueRequestRepository.existsById(id)){
-            throw new NoSuchElementException("User not found");
+            throw new NoSuchElementException("Request is not found");
         }
         rescueRequestRepository.deleteById(id);
     }
@@ -95,6 +100,7 @@ public class RescueRequestServiceImpl implements RescueRequestService {
     @Override
     public RescueRequest updateRescueByRescuer(Long id, RescueRequest rescueRequest) {
         Optional<RescueRequest> rescuePre = rescueRequestRepository.findById(id);
+
         if (rescuePre.isPresent()){
             RescueRequest newRescue = rescuePre.get();
             newRescue.setStatus(rescueRequest.getStatus());
