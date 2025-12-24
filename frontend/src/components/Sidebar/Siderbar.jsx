@@ -44,7 +44,7 @@ const Sidebar = ({ onFilterChange, activeCategoryId }) => {
               onChange={(e) => setKeyword(e.target.value)}
             />
             {keyword && (
-              <span 
+              <span
                 className="position-absolute end-0 top-50 translate-middle-y me-3 cursor-pointer text-muted"
                 onClick={() => setKeyword("")}
                 style={{ cursor: 'pointer', zIndex: 5 }}
@@ -68,7 +68,7 @@ const Sidebar = ({ onFilterChange, activeCategoryId }) => {
           >
             <i className="fas fa-th-large me-2"></i> Tất cả bài viết
           </button>
-          
+
           {categories.map(cat => (
             <button
               key={cat.id}
@@ -90,7 +90,7 @@ const Sidebar = ({ onFilterChange, activeCategoryId }) => {
           {trending.map(blog => (
             <Link to={`/blog/${blog.id}`} key={blog.id} className="d-flex align-items-center p-3 text-decoration-none border-bottom last-child-border-0 trending-hover text-dark">
               <div className="flex-grow-1">
-                <small className="text-muted d-block mb-1" style={{fontSize: '11px'}}>
+                <small className="text-muted d-block mb-1" style={{ fontSize: '11px' }}>
                   <i className="far fa-calendar-alt me-1"></i> {new Date(blog.time).toLocaleDateString('vi-VN')}
                 </small>
                 <h6 className="mb-0 fw-semibold small line-clamp-2">{blog.title}</h6>
@@ -102,7 +102,7 @@ const Sidebar = ({ onFilterChange, activeCategoryId }) => {
 
       {/* APP PROMO */}
       <div className="promo-banner bg-primary rounded-4 p-4 text-center text-white shadow">
-        <div className="icon-circle mb-3 mx-auto bg-white text-primary d-flex align-items-center justify-content-center" style={{width:'50px', height:'50px', borderRadius:'50%'}}>
+        <div className="icon-circle mb-3 mx-auto bg-white text-primary d-flex align-items-center justify-content-center" style={{ width: '50px', height: '50px', borderRadius: '50%' }}>
           <i className="fas fa-bell fa-lg text-warning"></i>
         </div>
         <h6 className="fw-bold">NHẬN TIN KHẨN CẤP</h6>

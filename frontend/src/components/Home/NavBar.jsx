@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; // 1. Import Auth Hook
-
+import * as bootstrap from 'bootstrap';
 const Navbar = () => {
   // 2. Get user data and logout function
   const { user, logout } = useAuth();
@@ -12,6 +12,7 @@ const Navbar = () => {
     navigate('/'); // Redirect to Home after logout
   };
 
+  console.log("Current User Role:", user?.role);
   return (
     <>
       {/* Top Bar */}
@@ -39,10 +40,38 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse" id="mainNav">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 fw-medium align-items-center">
-              
-              <li className="nav-item"><Link className="nav-link active" to="/">Trang chủ</Link></li>
-              <li className="nav-item"><a className="nav-link" href="#live-map">Bản đồ số</a></li>
-              <li className="nav-item"><a className="nav-link" href="#resources">Nguồn lực</a></li>
+
+              <li className="nav-item">
+                <Link className="nav-link active" to="/">Trang chủ</Link>
+              </li>
+
+              {/* Link xem danh sách cứu trợ: Guest, Victim và Admin đều nên xem được */}
+              {(user?.role !== 'ROLE_RESCUETEAM') && (
+                <li className="nav-item">
+                  <Link className="nav-link active" to="/user/rescue">Danh sách cứu trợ</Link>
+                </li>
+              )}
+
+              <li className="nav-item">
+                <Link className="nav-link active" to="/blogs">Tin tức</Link>
+              </li>
+
+
+              {/* --- NHÓM 2: HIỂN THỊ THEO ROLE CỤ THỂ --- */}
+
+              {/* Chỉ dành cho RESCUER */}
+              {user?.role === 'ROLE_RESCUETEAM' && (
+                <li className="nav-item">
+                  <Link className="nav-link active" to="/rescuer/rescue">Bảng điều khiển cứu hộ</Link>
+                </li>
+              )}
+
+              {/* Chỉ dành cho ADMIN */}
+              {user?.role === 'ROLE_ADMIN' && (
+                <li className="nav-item">
+                  <Link className="nav-link active" to="/admin/blogs">Quản lý tin tức</Link>
+                </li>
+              )}
 
               {/* --- CONDITIONAL RENDERING AREA --- */}
               <li className="nav-item ms-lg-3">

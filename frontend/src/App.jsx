@@ -71,10 +71,6 @@ function App() {
           element: <ManageRequestDetail />,
         },
         {
-          path: "/admin/rescue",
-          element: <AdminRescueRequestPage />,
-        },
-        {
           path: "/admin/detail-request/:id",
           element: <AdminRequestDetail />,
         },
@@ -93,20 +89,25 @@ function App() {
       ],
     },
     {
-    // NHÁNH CHO ADMIN (Dùng AdminLayout riêng, không bị dính Navbar của Layout trên)
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      {
-        path: "blogs", // URL: /admin/blogs
-        element: <BlogManagement />,
-      },
-    ],
+      // NHÁNH CHO ADMIN (Dùng AdminLayout riêng, không bị dính Navbar của Layout trên)
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        {
+          path: "blogs", // URL: /admin/blogs
+          element: <BlogManagement />,
+        },
+        {
+          path: "/admin/rescue",
+          element: <AdminRescueRequestPage />,
+        },
+      ],
     },
     {
-          path: "/blog/:id",
-          element: <BlogDetail />,
-        },
+      path: "/blog/:id",
+      element: <BlogDetail />,
+    },
+
   ]);
 
   return (

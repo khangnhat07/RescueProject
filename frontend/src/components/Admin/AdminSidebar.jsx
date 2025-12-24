@@ -22,29 +22,24 @@ const AdminSidebar = () => {
       <div className="list-group list-group-flush mt-3">
         {/* Nhóm chính */}
         <Link
-          to="/admin/dashboard"
+          to="/"
           className={`list-group-item list-group-item-action ${isActive(
             "dashboard"
           )}`}
         >
-          <i className="fas fa-th-large me-3"></i>Tổng quan
+          <i className="fas fa-th-large me-3"></i>Trở về
         </Link>
 
         <Link
-          to="/admin/sos"
+          to="/admin/rescue"
           className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${isActive(
             "sos"
           )}`}
         >
           <span>
-            <i className="fas fa-bullhorn me-3"></i>Quản lý tin báo
+            <i className="fas fa-bullhorn me-3"></i>Quản lý tin cứu trợ
           </span>
-          <span
-            className="badge rounded-pill bg-danger"
-            style={{ fontSize: "0.7rem" }}
-          >
-            5
-          </span>
+
         </Link>
 
         <Link
@@ -71,12 +66,7 @@ const AdminSidebar = () => {
         {/* Nhóm hệ thống - cách ra một đoạn */}
         <div className="sidebar-divider my-4 border-top border-secondary opacity-25"></div>
 
-        <Link
-          to="/admin/settings"
-          className="list-group-item list-group-item-action"
-        >
-          <i className="fas fa-cog me-3"></i>Cấu hình
-        </Link>
+
 
         <Link
           to="/logout"
