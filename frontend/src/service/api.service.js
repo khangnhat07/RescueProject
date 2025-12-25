@@ -1,6 +1,6 @@
 import axios from './axios.customize';
 
-const CreateRequestAPI = (address, detail, datetime, typeId) => {
+const CreateRequestAPI = (address, detail, datetime, typeId, image) => {
 
     const URL_BACKEND = "/requests";
     const data = {
@@ -9,7 +9,8 @@ const CreateRequestAPI = (address, detail, datetime, typeId) => {
         detail: detail,
         type: {
             id: typeId
-        }
+        },
+        image: image
     }
     return axios.post(URL_BACKEND, data)
 
@@ -61,7 +62,7 @@ const deleteRequestAPI = (id) => {
     return axios.delete(URL_BACKEND);
 }
 
-const updateRequestAPI = (id, address, detail, typeId) => {
+const updateRequestAPI = (id, address, detail, typeId, image) => {
 
     const URL_BACKEND = `/requests/${id}`;
     const data = {
@@ -69,14 +70,27 @@ const updateRequestAPI = (id, address, detail, typeId) => {
         detail: detail,
         type: {
             id: typeId
-        }
+        },
+        image: image
     }
 
     return axios.put(URL_BACKEND, data);
 }
 
+const completeAcceptRequestAPI = (id) => {
+    const URL_BACKEND = `/rescueteam/requests/${id}/complete`;
+    return axios.patch(URL_BACKEND);
+}
+
+const searchRequestByKeywordAPI = (keyword) => {
+    const URL_BACKEND = `/requests/search`;
+    return axios.get(URL_BACKEND, {
+        params: { keyword }
+    });
+}
+
 export {
     fetchAllRequestAPI, CreateRequestAPI, filterStatusRequestAPI, fetchAllRequestByVictimAPI,
     fetchRequestDetailByIdAPI, acceptRequestAPI, fetchAllRequestByRescuerAPI, cancelAcceptRequestAPI,
-    fetchChatHistoryAPI, deleteRequestAPI, updateRequestAPI
+    fetchChatHistoryAPI, deleteRequestAPI, updateRequestAPI, completeAcceptRequestAPI, searchRequestByKeywordAPI
 }

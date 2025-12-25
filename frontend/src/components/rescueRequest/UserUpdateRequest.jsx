@@ -1,28 +1,39 @@
 import { useEffect, useState } from "react";
 import { updateRequestAPI } from "../../service/api.service";
+import { uploadImageToCloudinary } from "../../utils/cloudinaryUploads";
 
 const UpdateRescueRequestModal = (props) => {
     // Các props nhận từ component cha
-    const { show, handleClose, data } = props;
+    const { show, handleClose, data, loadDetail } = props;
 
     const [address, setAddress] = useState("");
     const [detail, setDetail] = useState("");
     const [typeId, setTypeId] = useState("");
+    const [imageFile, setImageFile] = useState(null); // Để lưu file mới chọn
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (data) {
             setAddress(data.address || "");
             setDetail(data.detail || "");
             setTypeId(data.type?.id || "");
+            setImageFile(null);
         }
     }, [data, show]);
 
     const handleUpdateRequest = async () => {
+        setIsSubmitting(true);
         try {
-            const res = await updateRequestAPI(data.id, address, detail, typeId);
+            let finalImageUrl = data.image;
+            // NẾU CÓ CHỌN FILE MỚI: Upload để lấy link mới
+            if (imageFile) {
+                finalImageUrl = await uploadImageToCloudinary(imageFile);
+            }
+            const res = await updateRequestAPI(data.id, address, detail, typeId, finalImageUrl);
             console.log("check res update:", res);
             if (res && res.status === "success") {
                 alert("Cập nhật thông tin thành công!");
+                await loadDetail();
                 handleClose(); // Đóng modal
 
             } else {
@@ -32,6 +43,8 @@ const UpdateRescueRequestModal = (props) => {
         } catch (error) {
             console.error("Lỗi update:", error);
             alert("Lỗi kết nối server.");
+        } finally {
+            setIsSubmitting(false);
         }
 
         handleClose();
@@ -106,15 +119,39 @@ const UpdateRescueRequestModal = (props) => {
                                     />
                                 </div>
 
-                                {/* HÌNH ẢNH */}
                                 <div className="mb-4">
-                                    <label className="form-label fw-bold small text-secondary text-uppercase mb-2">Hình ảnh hiện trường (Cập nhật mới)</label>
+                                    <label className="form-label fw-bold small text-secondary text-uppercase mb-2">
+                                        Hình ảnh hiện trường
+                                    </label>
+
+                                    {/* Hiển thị ảnh cũ nếu có */}
+                                    <div className="mb-3">
+                                        <p className="small text-muted mb-1">Ảnh đã gửi:</p>
+                                        {data?.image ? (
+                                            <img
+                                                src={data.image}
+                                                alt="Current"
+                                                className="rounded border shadow-sm"
+                                                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            <div className="text-muted small border rounded p-2 bg-light">Chưa có ảnh</div>
+                                        )}
+                                    </div>
+
+                                    {/* Input chọn ảnh mới */}
                                     <div className="input-group">
-                                        <input type="file" className="form-control form-control-sm" id="updateFile" />
+                                        <input
+                                            type="file"
+                                            className="form-control form-control-sm"
+                                            id="updateFile"
+                                            onChange={(e) => setImageFile(e.target.files[0])}
+                                        />
                                         <label className="input-group-text bg-light" htmlFor="updateFile">
                                             <i className="fas fa-camera"></i>
                                         </label>
                                     </div>
+                                    <small className="text-muted">Để trống nếu không muốn thay đổi ảnh.</small>
                                 </div>
 
                                 {/* NÚT LƯU */}
@@ -131,10 +168,15 @@ const UpdateRescueRequestModal = (props) => {
                                     <div className="col-6">
                                         <button
                                             type="button"
-                                            className="btn btn-danger w-100 py-2 fw-bold rounded-pill shadow-sm hover-scale"
+                                            className="btn btn-danger w-100 py-2 fw-bold rounded-pill shadow-sm"
                                             onClick={handleUpdateRequest}
+                                            disabled={isSubmitting}
                                         >
-                                            <i className="fas fa-save me-2"></i>
+                                            {isSubmitting ? (
+                                                <span className="spinner-border spinner-border-sm me-2"></span>
+                                            ) : (
+                                                <i className="fas fa-save me-2"></i>
+                                            )}
                                             LƯU THÔNG TIN
                                         </button>
                                     </div>

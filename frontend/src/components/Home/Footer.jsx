@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container">
         <div className="row g-4 mb-4">
           <div className="col-lg-4">
-            <h4 className="fw-bold text-danger mb-3"><i className="fas fa-star-of-life me-2"></i>SAR VIETNAM</h4>
+            <h4 className="fw-bold text-danger mb-3"><i className="fas fa-star-of-life me-2"></i>KKT VIETNAM</h4>
             <p className="text-secondary">Cổng thông tin cứu nạn phi lợi nhuận. Kết nối sức mạnh cộng đồng để không ai bị bỏ lại phía sau.</p>
           </div>
           <div className="col-lg-2 col-6">
@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
         <hr className="border-secondary" />
         <div className="text-center text-secondary small">
-          &copy; 2024 SAR Vietnam. Design with Bootstrap 5.
+          &copy; KKT Vietnam. Design with Bootstrap 5.
         </div>
       </div>
     </footer>

@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import "./adminRescue.css";
 import { useEffect, useState } from "react";
 import { fetchRequestDetailByIdAPI } from "../../service/api.service";
+import { Link } from "react-router-dom";
 
 
 const AdminRequestDetail = () => {
@@ -11,6 +12,19 @@ const AdminRequestDetail = () => {
     useEffect(() => {
         loadDetail();
     }, [id]);
+
+    const getStatusClass = (status) => {
+        switch (status) {
+            case "COMPLETE":
+                return "status-badge st-done"; // xanh lá
+            case "IN_PROCESS":
+                return "status-badge st-processing"; // xanh biển
+            case "WAITING_ACCEPT":
+                return "status-badge st-waiting"; // đỏ
+            default:
+                return "status-badge st-waiting";
+        }
+    };
 
     const loadDetail = async () => {
         const res = await fetchRequestDetailByIdAPI(id);
@@ -36,12 +50,11 @@ const AdminRequestDetail = () => {
                     </div>
 
                     <div className="mt-2 mt-md-0">
-                        <button className="btn btn-outline-danger me-2">
-                            <i className="fas fa-times"></i> Từ chối
-                        </button>
-                        <button className="btn btn-success">
-                            <i className="fas fa-check-circle"></i> Tiếp nhận cứu hộ
-                        </button>
+                        <Link to={`/admin/rescue`}>
+                            <button className="btn btn-outline-secondary me-2">
+                                <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                            </button>
+                        </Link>
                     </div>
                 </div>
 
@@ -77,12 +90,15 @@ const AdminRequestDetail = () => {
                                     <div className="fw-bold">{request.type.name}</div>
                                 </div>
                                 <div className="col-md-4 mb-3">
-                                    <label className="text-muted small">Số lượng người</label>
-                                    <div className="fw-bold">1 người</div>
+                                    <label className="text-muted small">Người đăng / Số điện thoại</label>
+                                    <div className="small fw-bold">{request.victim.username}</div>
+                                    <div className="small text-muted">
+                                        <i className="fas fa-phone me-1"></i>{request.victim.phone}
+                                    </div>
                                 </div>
                                 <div className="col-md-4 mb-3">
-                                    <label className="text-muted small">Yêu cầu y tế</label>
-                                    <div className="fw-bold text-success">Không nguy kịch</div>
+                                    <label className="text-muted small">Trạng thái</label>
+                                    <div className={`fw-bold ${getStatusClass(request.status)}`}>{request.status}</div>
                                 </div>
                             </div>
                             <div className="alert alert-danger border-danger">
@@ -93,8 +109,30 @@ const AdminRequestDetail = () => {
 
                             <h6 className="mt-3">Hình ảnh hiện trường</h6>
                             <div className="d-flex gap-2 mt-2">
-                                <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 1" />
-                                <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 2" />
+                                {request.image ? (
+                                    // Nếu có ảnh từ Database (Cloudinary link)
+                                    <div className="position-relative">
+                                        <img
+                                            src={request.image}
+                                            className="rounded border shadow-sm"
+                                            alt="Ảnh hiện trường"
+                                            style={{
+                                                width: '150px',
+                                                height: '150px',
+                                                objectFit: 'cover',
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={() => window.open(request.image, '_blank')} // Nhấn vào để xem ảnh phóng to
+                                        />
+                                        <small className="d-block text-center text-muted mt-1">Ấn vào ảnh để xem rõ hơn</small>
+                                    </div>
+                                ) : (
+                                    // Nếu không có ảnh
+                                    <div className="text-muted fst-italic p-3 border rounded bg-light w-100 text-center">
+                                        <i className="fa-regular fa-image me-2"></i>
+                                        Người đăng không cung cấp hình ảnh hiện trường.
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -129,33 +167,33 @@ const AdminRequestDetail = () => {
                         <div className="rescue-card bg-white p-3">
                             <h6 className="mb-3">Tiến độ xử lý</h6>
                             <ul className="timeline">
-                                <li className="timeline-item">
-                                    <div className="fw-bold text-success">Đã hoàn thành</div>
-                                    <div className="timeline-time">--:--</div>
+                                <li className={`timeline-item ${request.status === 'COMPLETE' ? 'active' : 'opacity-50'}`}>
+                                    <div className={`fw-bold ${request.status === 'COMPLETE' ? 'text-success' : ''}`}>
+                                        Đã hoàn thành
+                                    </div>
+                                    <div className="timeline-time">
+                                        {request.status === 'COMPLETE' ? 'Đã xong' : '--:--'}
+                                    </div>
                                 </li>
-                                <li className="timeline-item">
-                                    <div className="fw-bold text-primary">Đang di chuyển đến</div>
-                                    <div className="timeline-time">--:--</div>
+
+                                {/* BƯỚC 2: TIẾP NHẬN & THỰC HIỆN */}
+                                <li className={`timeline-item ${(request.status === 'IN_PROCESS' || request.status === 'COMPLETE') ? 'active' : 'opacity-50'}`}>
+                                    <div className={`fw-bold ${request.status === 'IN_PROCESS' ? 'text-primary' : ''}`}>
+                                        Đội cứu hộ đang xử lý
+                                    </div>
+                                    <div className="timeline-time">
+                                        {(request.status === 'IN_PROCESS' || request.status === 'COMPLETE') ? 'Đang thực hiện' : '--:--'}
+                                    </div>
                                 </li>
-                                <li className="timeline-item">
-                                    <div className="fw-bold">Đội cứu hộ tiếp nhận</div>
-                                    <div className="timeline-time">--:--</div>
-                                </li>
-                                <li className="timeline-item">
-                                    <div className="fw-bold">Người dùng gửi Yêu cầu</div>
-                                    <div className="timeline-time">10:30 AM</div>
+
+                                {/* BƯỚC 1: GỬI YÊU CẦU  */}
+                                <li className="timeline-item active">
+                                    <div className="fw-bold">Yêu cầu đã được gửi</div>
+                                    <div className="timeline-time">{request.datetime}</div>
                                 </li>
                             </ul>
 
-                            <div className="mt-3 pt-3 border-top">
-                                <label className="form-label small fw-bold">Cập nhật trạng thái:</label>
-                                <select className="form-select form-select-sm mb-2">
-                                    <option>Đang di chuyển đến hiện trường</option>
-                                    <option>Đã đến nơi</option>
-                                    <option>Đang sơ cứu</option>
-                                </select>
-                                <button className="btn btn-sm btn-dark w-100">Cập nhật</button>
-                            </div>
+
                         </div>
                     </div>
                 </div>

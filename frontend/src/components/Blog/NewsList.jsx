@@ -35,11 +35,11 @@ const NewsList = ({ blogs, loading, onCategorySelect }) => {
         <button className="btn btn-outline-primary btn-sm rounded-pill px-3" onClick={() => onCategorySelect(2)}>
           Kỹ năng sinh tồn
         </button>
-        <button className="btn btn-outline-info btn-sm rounded-pill px-3" onClick={() => onCategorySelect(3)}>
-          Kiến thức cộng đồng
-        </button>
-        <button className="btn btn-outline-success btn-sm rounded-pill px-3" onClick={() => onCategorySelect(4)}>
+        <button className="btn btn-outline-success btn-sm rounded-pill px-3" onClick={() => onCategorySelect(3)}>
           Tin tức cứu hộ
+        </button>
+        <button className="btn btn-outline-info btn-sm rounded-pill px-3" onClick={() => onCategorySelect(4)}>
+          Kiến thức cộng đồng
         </button>
       </div>
 

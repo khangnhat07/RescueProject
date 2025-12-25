@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { acceptRequestAPI, cancelAcceptRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
+import { acceptRequestAPI, cancelAcceptRequestAPI, completeAcceptRequestAPI, fetchRequestDetailByIdAPI } from "../../service/api.service";
 import { useAuth } from '../../context/AuthContext';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +13,22 @@ const ManageRequestDetail = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
+    const getStatusClass = (status) => {
+        switch (status) {
+            case "COMPLETE":
+                return "status-badge st-done"; // xanh lá
+            case "IN_PROCESS":
+                return "status-badge st-processing"; // xanh biển
+            case "WAITING_ACCEPT":
+                return "status-badge st-waiting"; // đỏ
+            default:
+                return "status-badge st-waiting";
+        }
+    };
+
     // Hàm xử lý khi bấm nút Chat
     const handleChatClick = () => {
-        navigate(`/chat/${id}`); 
+        navigate(`/chat/${id}`);
     };
 
     useEffect(() => {
@@ -66,6 +79,24 @@ const ManageRequestDetail = () => {
         }
     };
 
+    const handleCompleteRequest = async () => {
+        if (window.confirm(`Bạn xác nhận đã hoàn yêu cầu cứu hộ cho yêu cầu #${id}?`)) {
+            setIsSubmitting(true);
+            try {
+                const res = await completeAcceptRequestAPI(id);
+                if (res) {
+                    alert("Hoàn thành yêu cầu thành công! Trạng thái đã chuyển sang Đã hoàn thành.");
+                    await loadDetail(); // Tải lại dữ liệu để cập nhật giao diện (hiện nút tiếp nhận)
+                }
+            } catch (error) {
+                console.error("Lỗi:", error);
+                alert("Không thể hoàn thành.");
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+
+    };
 
     if (!request) {
         return <div>Đang tải...</div>;
@@ -74,6 +105,8 @@ const ManageRequestDetail = () => {
     // --- LOGIC KIỂM TRA QUYỀN ---
     // console.log("Dữ liệu User đang đăng nhập:", user);
     const isWaiting = request.status === "WAITING_ACCEPT";
+    const isInProcess = request.status === "IN_PROCESS";
+    const isComplete = request.status === "COMPLETE";
     const isProcessedByMe = request.rescuer && request.rescuer.email === user?.email;
     const isProcessedByOther = request.rescuer && request.rescuer.email !== user?.email;
 
@@ -88,8 +121,13 @@ const ManageRequestDetail = () => {
                             Yêu cầu # {id}
                         </h4>
                         <p className="text-muted mb-0">Thời gian báo: {request.datetime} </p>
-                        <span className={`badge ${request.status === 'WAITING_ACCEPT' ? 'bg-danger' : 'bg-primary'}`}>
-                            {request.status === 'WAITING_ACCEPT' ? 'Đang chờ' : 'Đang thực hiện'}
+                        <span className={`badge ${request.status === 'WAITING_ACCEPT' ? 'bg-danger' :
+                            request.status === 'COMPLETE' ? 'bg-success' : 'bg-primary'
+                            }`}>
+                            {
+                                request.status === 'WAITING_ACCEPT' ? 'Đang chờ' :
+                                    request.status === 'COMPLETE' ? 'Đã hoàn thành' : 'Đang thực hiện'
+                            }
                         </span>
 
                     </div>
@@ -101,16 +139,11 @@ const ManageRequestDetail = () => {
                                 <button className="btn btn-success me-2" onClick={handleAcceptRequest}>
                                     <i className="fas fa-check-circle me-1"></i> Tiếp nhận cứu hộ
                                 </button>
-                                <Link to={`/rescuer/rescue`}>
-                                    <button className="btn btn-outline-secondary me-2">
-                                        <i className="fa-solid fa-arrow-left me-2"></i>Trở về
-                                    </button>
-                                </Link>
                             </>
                         )}
 
                         {/* TH 2: CHÍNH TÔI đã nhận -> Hiện nút Hủy và Cập nhật */}
-                        {isProcessedByMe && (
+                        {isProcessedByMe && !isComplete && (
                             <>
                                 <button className="btn btn-danger me-2" onClick={handleCancelRequest}>
                                     <i className="fa-solid fa-ban me-2"></i>Hủy xử lý
@@ -118,11 +151,6 @@ const ManageRequestDetail = () => {
                                 <button className="btn btn-dark me-2" disabled>
                                     <i className="fas fa-user-check me-2"></i>Bạn đang xử lý
                                 </button>
-                                <Link to={`/rescuer/rescue`}>
-                                    <button className="btn btn-outline-secondary me-2">
-                                        <i className="fa-solid fa-arrow-left me-2"></i>Trở về
-                                    </button>
-                                </Link>
                             </>
                         )}
                         {/* TH 3: NGƯỜI KHÁC đã nhận -> Chỉ hiện thông báo, không cho bấm gì */}
@@ -132,13 +160,22 @@ const ManageRequestDetail = () => {
                                     <i className="fas fa-info-circle me-2"></i>
                                     Nhân viên <strong>{request.rescuer.username}</strong> đang xử lý ca này
                                 </div>
-                                <Link to={`/rescuer/rescue`}>
-                                    <button className="btn btn-outline-secondary">
-                                        <i className="fa-solid fa-arrow-left me-2"></i>Trở về
-                                    </button>
-                                </Link>
                             </>
                         )}
+
+                        {isProcessedByMe && isComplete && (
+                            <>
+                                <button className="btn btn-dark me-2" disabled>
+                                    <i className="fas fa-user-check me-2"></i>Bạn đã hoàn thành
+                                </button>
+                            </>
+                        )}
+
+                        <Link to={`/rescuer/rescue`}>
+                            <button className="btn btn-outline-secondary me-2">
+                                <i className="fa-solid fa-arrow-left me-2"></i>Trở về
+                            </button>
+                        </Link>
                     </div>
                 </div>
 
@@ -174,12 +211,15 @@ const ManageRequestDetail = () => {
                                     <div className="fw-bold">{request.type.name}</div>
                                 </div>
                                 <div className="col-md-4 mb-3">
-                                    <label className="text-muted small">Số lượng người</label>
-                                    <div className="fw-bold">1 người</div>
+                                    <label className="text-muted small">Người đăng / Số điện thoại</label>
+                                    <div className="small fw-bold">{request.victim.username}</div>
+                                    <div className="small text-muted">
+                                        <i className="fas fa-phone me-1"></i>{request.victim.phone}
+                                    </div>
                                 </div>
                                 <div className="col-md-4 mb-3">
-                                    <label className="text-muted small">Yêu cầu y tế</label>
-                                    <div className="fw-bold text-success">Không nguy kịch</div>
+                                    <label className="text-muted small">Trạng thái</label>
+                                    <div className={`fw-bold ${getStatusClass(request.status)}`}>{request.status}</div>
                                 </div>
                             </div>
                             <div className="alert alert-danger border-danger">
@@ -190,8 +230,30 @@ const ManageRequestDetail = () => {
 
                             <h6 className="mt-3">Hình ảnh hiện trường</h6>
                             <div className="d-flex gap-2 mt-2">
-                                <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 1" />
-                                <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 2" />
+                                {request.image ? (
+                                    // Nếu có ảnh từ Database (Cloudinary link)
+                                    <div className="position-relative">
+                                        <img
+                                            src={request.image}
+                                            className="rounded border shadow-sm"
+                                            alt="Ảnh hiện trường"
+                                            style={{
+                                                width: '150px',
+                                                height: '150px',
+                                                objectFit: 'cover',
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={() => window.open(request.image, '_blank')} // Nhấn vào để xem ảnh phóng to
+                                        />
+                                        <small className="d-block text-center text-muted mt-1">Ấn vào ảnh để xem rõ hơn</small>
+                                    </div>
+                                ) : (
+                                    // Nếu không có ảnh
+                                    <div className="text-muted fst-italic p-3 border rounded bg-light w-100 text-center">
+                                        <i className="fa-regular fa-image me-2"></i>
+                                        Người đăng không cung cấp hình ảnh hiện trường.
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -226,32 +288,40 @@ const ManageRequestDetail = () => {
                         <div className="rescue-card bg-white p-3">
                             <h6 className="mb-3">Tiến độ xử lý</h6>
                             <ul className="timeline">
-                                <li className="timeline-item">
-                                    <div className="fw-bold text-success">Đã hoàn thành</div>
-                                    <div className="timeline-time">--:--</div>
+                                <li className={`timeline-item ${request.status === 'COMPLETE' ? 'active' : 'opacity-50'}`}>
+                                    <div className={`fw-bold ${request.status === 'COMPLETE' ? 'text-success' : ''}`}>
+                                        Đã hoàn thành
+                                    </div>
+                                    <div className="timeline-time">
+                                        {request.status === 'COMPLETE' ? 'Đã xong' : '--:--'}
+                                    </div>
                                 </li>
-                                <li className="timeline-item">
-                                    <div className="fw-bold text-primary">Đang di chuyển đến</div>
-                                    <div className="timeline-time">--:--</div>
+
+                                {/* BƯỚC 2: TIẾP NHẬN & THỰC HIỆN */}
+                                <li className={`timeline-item ${(request.status === 'IN_PROCESS' || request.status === 'COMPLETE') ? 'active' : 'opacity-50'}`}>
+                                    <div className={`fw-bold ${request.status === 'IN_PROCESS' ? 'text-primary' : ''}`}>
+                                        Đội cứu hộ đang xử lý
+                                    </div>
+                                    <div className="timeline-time">
+                                        {(request.status === 'IN_PROCESS' || request.status === 'COMPLETE') ? 'Đang thực hiện' : '--:--'}
+                                    </div>
                                 </li>
-                                <li className="timeline-item">
-                                    <div className="fw-bold">Đội cứu hộ tiếp nhận</div>
-                                    <div className="timeline-time">--:--</div>
-                                </li>
-                                <li className="timeline-item">
-                                    <div className="fw-bold">Người dùng gửi Yêu cầu</div>
-                                    <div className="timeline-time">10:30 AM</div>
+
+                                {/* BƯỚC 1: GỬI YÊU CẦU  */}
+                                <li className="timeline-item active">
+                                    <div className="fw-bold">Yêu cầu đã được gửi</div>
+                                    <div className="timeline-time">{request.datetime}</div>
                                 </li>
                             </ul>
 
-                            <div className="mt-3 pt-3 border-top">
-                                <label className="form-label small fw-bold">Cập nhật trạng thái:</label>
-                                <select className="form-select form-select-sm mb-2">
-                                    <option>Đang di chuyển đến hiện trường</option>
-                                    <option>Đã đến nơi</option>
-                                    <option>Đang sơ cứu</option>
-                                </select>
-                                <button className="btn btn-sm btn-dark w-100">Cập nhật</button>
+                            <div className="mt-3 pt-3 border-top d-flex justify-content-center">
+                                {isProcessedByMe && isInProcess && (
+                                    <>
+                                        <button className="btn btn-success me-2" onClick={handleCompleteRequest}>
+                                            <i class="fa-solid fa-check me-2"></i>Hoàn Thành
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

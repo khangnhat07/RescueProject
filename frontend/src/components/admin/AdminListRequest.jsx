@@ -1,9 +1,57 @@
-import { deleteRequestAPI } from "../../service/api.service";
+import { useState } from "react";
+import { deleteRequestAPI, filterStatusRequestAPI, searchRequestByKeywordAPI } from "../../service/api.service";
 import "./adminRescue.css";
 import { Link } from "react-router-dom";
 const AdminListRequest = (props) => {
 
-    const { dataRequest, loadAllRequest } = props;
+    const { dataRequest, loadAllRequest, setDataRequest } = props;
+    const [statusFilter, setStatusFilter] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const waitingCount = dataRequest.filter(item => item.status === 'WAITING_ACCEPT').length;
+    const inProcessCount = dataRequest.filter(item => item.status === 'IN_PROCESS').length;
+    const completeCount = dataRequest.filter(item => item.status === 'COMPLETE').length;
+
+    const formatNumber = (num) => num < 10 ? `0${num}` : num;
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    };
+
+    const performSearch = async () => {
+        // Nếu ô tìm kiếm trống, load lại toàn bộ danh sách
+        if (!searchTerm.trim()) {
+            await loadAllRequest();
+            return;
+        }
+
+        try {
+            const res = await searchRequestByKeywordAPI(searchTerm);
+            if (res && res.data) {
+                setDataRequest(res.data);
+                setStatusFilter(""); // Reset bộ lọc status khi tìm kiếm theo từ khóa
+            }
+        } catch (error) {
+            console.error("Lỗi tìm kiếm:", error);
+        }
+    };
+
+    const handleFilter = async (status) => {
+        setStatusFilter(status);
+        setSearchTerm("");
+
+        if (status === "") {
+            await loadAllRequest();
+            return;
+        }
+        const res = await filterStatusRequestAPI(status);
+        console.log("Filter result: ", res.data);
+
+        setDataRequest(res.data);
+
+    };
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -51,7 +99,7 @@ const AdminListRequest = (props) => {
                                 <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.65rem' }}>
                                     Đang chờ đợi
                                 </h6>
-                                <h2 className="fw-bolder text-danger mb-0">05</h2>
+                                <h2 className="fw-bolder text-danger mb-0">{formatNumber(waitingCount)}</h2>
                             </div>
                             <div className="icon-box bg-danger bg-opacity-10 text-danger d-none d-sm-flex">
                                 <i className="fas fa-exclamation-triangle"></i>
@@ -68,7 +116,7 @@ const AdminListRequest = (props) => {
                                 <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.65rem' }}>
                                     Đang cứu
                                 </h6>
-                                <h2 className="fw-bolder text-primary mb-0">12</h2>
+                                <h2 className="fw-bolder text-primary mb-0">{formatNumber(inProcessCount)}</h2>
                             </div>
                             <div className="icon-box bg-primary bg-opacity-10 text-primary d-none d-sm-flex">
                                 <i className="fas fa-ambulance"></i>
@@ -85,10 +133,10 @@ const AdminListRequest = (props) => {
                                 <h6 className="text-muted text-uppercase fw-bold mb-1" style={{ fontSize: '0.65rem' }}>
                                     Xong
                                 </h6>
-                                <h2 className="fw-bolder text-success mb-0">48</h2>
+                                <h2 className="fw-bolder text-success mb-0">{formatNumber(completeCount)}</h2>
                             </div>
                             <div className="icon-box bg-success bg-opacity-10 text-success d-none d-sm-flex">
-                                <i className="fas fa-check-double"></i>
+                                <i class="fa-solid fa-check"></i>
                             </div>
                         </div>
                     </div>
@@ -124,12 +172,18 @@ const AdminListRequest = (props) => {
                         <input
                             type="text"
                             className="form-control form-control-sm rounded-pill"
-                            placeholder="Tìm kiếm SĐT, Tên..."
+                            placeholder="Tìm SĐT hoặc địa chỉ..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
-                        <select className="form-select form-select-sm rounded-pill" style={{ width: '150px' }}>
-                            <option>Tất cả</option>
-                            <option>Chưa xử lý</option>
-                            <option>Đang xử lý</option>
+                        <select className="form-select form-select-sm rounded-pill" style={{ width: '150px' }}
+                            value={statusFilter}
+                            onChange={(event) => handleFilter(event.target.value)}>
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="WAITING_ACCEPT" className="text-danger fw-bold">Đang chờ cứu</option>
+                            <option value="IN_PROCESS" className="text-primary fw-bold">Đang xử lý</option>
+                            <option value="COMPLETE" className="text-success fw-bold">Đã an toàn</option>
                         </select>
                     </div>
                 </div>

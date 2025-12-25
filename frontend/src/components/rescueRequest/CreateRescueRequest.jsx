@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import "./rescue.css"
 import { CreateRequestAPI } from "../../service/api.service";
 import useDebounce from "../../hook/useDebounce";
+import { uploadImageToCloudinary } from "../../utils/cloudinaryUploads";
 
 const CreateRescueRequest = (props) => {
 
@@ -11,6 +12,8 @@ const CreateRescueRequest = (props) => {
     const [address, setAddress] = useState("");
     const [detail, setDetail] = useState("");
     const [typeId, setTypeId] = useState("");
+    const [imageFile, setImageFile] = useState(null); // State lưu file ảnh
+    const [isSubmitting, setIsSubmitting] = useState(false); // Trạng thái đang xử lý
     const [suggestions, setSuggestions] = useState([]);
     const debouncedAddress = useDebounce(address, 500);
 
@@ -29,22 +32,42 @@ const CreateRescueRequest = (props) => {
         setAddress("");
         setDetail("");
         setTypeId("");
+        setImageFile(null);
+        // Reset input file trên giao diện
+        const fileInput = document.getElementById("file-upload");
+        if (fileInput) fileInput.value = "";
     }
 
 
 
     const hanldeBtnCreate = async () => {
-        const timeCreated = getCurrentDateTimeString();
-        const res = await CreateRequestAPI(address, detail, timeCreated, typeId)
-        if (res.data) {
-            alert("Tạo yêu cầu cứu hộ thành công!");
-            resetInput();
-            await loadAllRequest();
-        } else {
-            alert("Tạo yêu cầu cứu hộ thất bại!");
+        setIsSubmitting(true);
+        try {
+            let image = "";
+            // BƯỚC 1: Nếu người dùng có chọn ảnh, upload lên Cloudinary trước
+            if (imageFile) {
+                image = await uploadImageToCloudinary(imageFile);
+            }
+            const timeCreated = getCurrentDateTimeString();
+            const res = await CreateRequestAPI(address, detail, timeCreated, typeId, image)
+
+            if (res.data) {
+                alert("Tạo yêu cầu cứu hộ thành công!");
+                resetInput();
+                await loadAllRequest();
+            } else {
+                alert("Tạo yêu cầu cứu hộ thất bại!");
+            }
+            console.log("check res: ", res)
+        } catch (error) {
+            console.error("Lỗi khi tạo yêu cầu:", error);
+            alert("Có lỗi xảy ra, vui lòng thử lại.");
+        } finally {
+            setIsSubmitting(false);
         }
-        console.log("check res: ", res)
     }
+
+
     const getMyLocation = () => {
         if (!navigator.geolocation) {
             alert("Trình duyệt không hỗ trợ định vị");
@@ -172,17 +195,31 @@ const CreateRescueRequest = (props) => {
                             />
                         </div>
 
-                        {/* ẢNH */}
+                        {/* PHẦN CHỌN ẢNH */}
                         <div className="mb-4">
-                            <label className="form-label fw-bold small text-secondary">HÌNH ẢNH (NẾU CÓ)</label>
-                            <input type="file" className="form-control form-control-sm" />
+                            <label className="form-label fw-bold small text-secondary">HÌNH ẢNH HIỆN TRƯỜNG</label>
+                            <input
+                                type="file"
+                                id="file-upload"
+                                className="form-control form-control-sm"
+                                accept="image/*"
+                                onChange={(e) => setImageFile(e.target.files[0])} // Lấy file khi người dùng chọn
+                            />
+                            {imageFile && <small className="text-success mt-1 d-block">Đã chọn: {imageFile.name}</small>}
                         </div>
 
-                        {/* SUBMIT */}
-                        <button type="button" className="btn btn-danger w-100 py-3 fw-bold rounded-pill shadow-sm hover-scale"
-                            onClick={hanldeBtnCreate}>
-                            <i className="fas fa-paper-plane me-2"></i>
-                            PHÁT TÍN HIỆU NGAY
+                        {/* NÚT SUBMIT */}
+                        <button
+                            type="button"
+                            className="btn btn-danger w-100 py-3 fw-bold rounded-pill shadow-sm"
+                            onClick={hanldeBtnCreate}
+                            disabled={isSubmitting} // Vô hiệu hóa khi đang upload
+                        >
+                            {isSubmitting ? (
+                                <span><i className="fas fa-spinner fa-spin me-2"></i>ĐANG XỬ LÝ...</span>
+                            ) : (
+                                <span><i className="fas fa-paper-plane me-2"></i>PHÁT TÍN HIỆU NGAY</span>
+                            )}
                         </button>
 
                         <p className="text-center mt-3 small text-muted fst-italic mb-0">

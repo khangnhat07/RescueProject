@@ -95,15 +95,14 @@ const UserRequestDetail = () => {
                                 </div>
 
                                 <div className="d-flex gap-2">
-                                    {/* NÚT NHẮN TIN - Hiển thị cho cả 2 trường hợp để trao đổi */}
-                                    <button className="btn btn-primary" onClick={handleChat}>
-                                        <i className="fa-solid fa-comment-dots me-2"></i>Nhắn tin
-                                    </button>
-
 
                                     {/* TH 1: CHÍNH TÔI đã tạo -> Hiện nút Hủy và Cập nhật */}
                                     {isPostByMe && (
                                         <>
+                                            <button className="btn btn-primary" onClick={handleChat}>
+                                                <i className="fa-solid fa-comment-dots me-2"></i>Nhắn tin
+                                            </button>
+
                                             <button className="btn btn-danger" onClick={handleCancelRequest}>
                                                 <i className="fa-solid fa-ban me-2"></i>Hủy yêu cầu
                                             </button>
@@ -184,8 +183,30 @@ const UserRequestDetail = () => {
 
                                 <h6 className="mt-3">Hình ảnh hiện trường</h6>
                                 <div className="d-flex gap-2 mt-2">
-                                    <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 1" />
-                                    <img src="https://placehold.co/100" className="rounded border" alt="Ảnh 2" />
+                                    {request.image ? (
+                                        // Nếu có ảnh từ Database (Cloudinary link)
+                                        <div className="position-relative">
+                                            <img
+                                                src={request.image}
+                                                className="rounded border shadow-sm"
+                                                alt="Ảnh hiện trường"
+                                                style={{
+                                                    width: '150px',
+                                                    height: '150px',
+                                                    objectFit: 'cover',
+                                                    cursor: 'pointer'
+                                                }}
+                                                onClick={() => window.open(request.image, '_blank')} // Nhấn vào để xem ảnh phóng to
+                                            />
+                                            <small className="d-block text-center text-muted mt-1">Ấn vào ảnh để xem rõ hơn</small>
+                                        </div>
+                                    ) : (
+                                        // Nếu không có ảnh
+                                        <div className="text-muted fst-italic p-3 border rounded bg-light w-100 text-center">
+                                            <i className="fa-regular fa-image me-2"></i>
+                                            Người đăng không cung cấp hình ảnh hiện trường.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -197,6 +218,7 @@ const UserRequestDetail = () => {
                 show={showUpdateModal}
                 handleClose={() => setShowUpdateModal(false)}
                 data={request}
+                loadDetail={loadDetail}
             />
         </>
     )

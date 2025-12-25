@@ -44,7 +44,8 @@ const RescueRequestPage = () => {
                     </div>
                     <div className="col-lg-8">
                         <FilterRescueRequest loadAllRequest={loadAllRequest}
-                            setDataRequest={setDataRequest} />
+                            setDataRequest={setDataRequest}
+                            dataRequest={dataRequest} />
                         <RescueRequestBody dataRequest={dataRequest} />
                     </div>
                 </div>

@@ -69,7 +69,7 @@ const Navbar = () => {
               {/* Chỉ dành cho ADMIN */}
               {user?.role === 'ROLE_ADMIN' && (
                 <li className="nav-item">
-                  <Link className="nav-link active" to="/admin/blogs">Quản lý tin tức</Link>
+                  <Link className="nav-link active" to="/admin/rescue">Quản lý & Thống kê</Link>
                 </li>
               )}
 
@@ -103,7 +103,7 @@ const Navbar = () => {
                       </li>
                       <li><hr className="dropdown-divider" /></li>
 
-                      <li><Link className="dropdown-item" to="/profile"><i className="fas fa-id-card me-2 text-muted"></i>Hồ sơ cá nhân</Link></li>
+                      <li><Link className="dropdown-item" to="/"><i className="fas fa-id-card me-2 text-muted"></i>Hồ sơ cá nhân</Link></li>
 
                       <li><hr className="dropdown-divider" /></li>
 

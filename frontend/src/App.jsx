@@ -98,7 +98,7 @@ function App() {
           element: <BlogManagement />,
         },
         {
-          path: "/admin/rescue",
+          path: "rescue",
           element: <AdminRescueRequestPage />,
         },
       ],

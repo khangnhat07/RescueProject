@@ -27,7 +27,7 @@ const AdminSidebar = () => {
             "dashboard"
           )}`}
         >
-          <i className="fas fa-th-large me-3"></i>Trở về
+          <i class="fa-solid fa-arrow-left me-3"></i>Trở về
         </Link>
 
         <Link

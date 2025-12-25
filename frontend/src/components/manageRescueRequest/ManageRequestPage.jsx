@@ -38,7 +38,8 @@ const ManageRequestPage = () => {
                 <div className="row g-4 justify-content-center">
                     <div className="col-lg-8">
                         <ManageFilterRequest loadAllRequest={loadAllRequest}
-                            setDataRequest={setDataRequest} />
+                            setDataRequest={setDataRequest}
+                            dataRequest={dataRequest} />
                         <ManageRequestBody dataRequest={dataRequest}
                             loadAllRequest={loadAllRequest} />
                     </div>
