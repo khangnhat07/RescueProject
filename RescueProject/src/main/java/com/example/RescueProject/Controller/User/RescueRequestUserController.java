@@ -82,4 +82,14 @@ public class RescueRequestUserController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/requests/search")
+    public ResponseEntity<?> search(@RequestParam String keyword) {
+        try {
+            List<RescueRequest> results = rescueRequestService.searchRescueRequests(keyword);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi tìm kiếm: " + e.getMessage());
+        }
+    }
+
 }

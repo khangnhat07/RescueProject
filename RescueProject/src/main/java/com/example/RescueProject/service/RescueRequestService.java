@@ -19,4 +19,6 @@ public interface RescueRequestService {
     List<RescueRequest> findRescueByRescuer();
     RescueRequest acceptRequest(Long id);
     RescueRequest cancelRequest(Long id);
+    RescueRequest completeRequest(Long id);
+    List<RescueRequest> searchRescueRequests(String keyword);
 }

@@ -37,7 +37,7 @@ public class RescueRequestServiceImpl implements RescueRequestService {
 
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new RuntimeException("Người dùng không tồn tại");
+            throw new RuntimeException("Phải đăng ký tài khoản");
         }
 
         rescueRequest.setVictim(user);
@@ -184,6 +184,41 @@ public class RescueRequestServiceImpl implements RescueRequestService {
     }else {
             throw new IllegalArgumentException("Không tìm thấy yêu cầu cứu hộ này.");
         }
+    }
+
+    @Override
+    public RescueRequest completeRequest(Long id) {
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<RescueRequest> rescueRequest = rescueRequestRepository.findById(id);
+
+        if (rescueRequest.isPresent()){
+            RescueRequest request = rescueRequest.get();
+            // kiểm tra quyền
+            if (request.getStatus() == EStatus.IN_PROCESS ){
+                if (request.getRescuer() != null && request.getRescuer().getEmail().equals(email)){
+                    // thực hiện hủy request
+                    request.setStatus(EStatus.COMPLETE);
+                    return rescueRequestRepository.save(request);
+                }
+                else {
+                    throw new RuntimeException("Bạn không có quyền hoàn thành yêu cầu của người khác!");
+                }
+            }
+            else {
+                throw new RuntimeException("Chỉ có hoàn thành yêu cầu khi đã nhận.");
+            }
+        }else {
+            throw new IllegalArgumentException("Không tìm thấy yêu cầu cứu hộ này.");
+        }
+    }
+
+    @Override
+    public List<RescueRequest> searchRescueRequests(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return rescueRequestRepository.findAll();
+        }
+        return rescueRequestRepository.searchByAddressOrPhone(keyword);
     }
 
 

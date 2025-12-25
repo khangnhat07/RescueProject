@@ -59,4 +59,16 @@ public class RescueRequestRescuerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PatchMapping("/{id}/complete")
+    @PreAuthorize("hasRole('RESCUETEAM')")
+    public ResponseEntity<?> completeRequest(@PathVariable Long id){
+        try{
+            RescueRequest updated = rescueRequestService.completeRequest(id);
+            return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,"Đã hoàn thành yêu cầu",updated,null));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
