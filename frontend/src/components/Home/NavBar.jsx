@@ -104,7 +104,6 @@ const Navbar = () => {
                       <li><hr className="dropdown-divider" /></li>
 
                       <li><Link className="dropdown-item" to="/profile"><i className="fas fa-id-card me-2 text-muted"></i>Hồ sơ cá nhân</Link></li>
-                      <li><Link className="dropdown-item" to="/history"><i className="fas fa-history me-2 text-muted"></i>Lịch sử hoạt động</Link></li>
 
                       <li><hr className="dropdown-divider" /></li>
 
@@ -124,7 +123,7 @@ const Navbar = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#loginModal"
                   >
-                    <i className="fas fa-user-astronaut me-2"></i>Thành viên
+                    <i className="fas fa-user-astronaut me-2"></i>Đăng nhập
                   </button>
                 )}
 

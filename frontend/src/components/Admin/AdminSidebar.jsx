@@ -42,19 +42,7 @@ const AdminSidebar = () => {
 
         </Link>
 
-        <Link
-          to="/admin/teams"
-          className="list-group-item list-group-item-action"
-        >
-          <i className="fas fa-users-cog me-3"></i>Đội cứu hộ
-        </Link>
 
-        <Link
-          to="/admin/map"
-          className="list-group-item list-group-item-action"
-        >
-          <i className="fas fa-map-marked-alt me-3"></i>Bản đồ tác chiến
-        </Link>
         <Link
           to="/admin/blogs"
           className={`list-group-item list-group-item-action ${isActive(
