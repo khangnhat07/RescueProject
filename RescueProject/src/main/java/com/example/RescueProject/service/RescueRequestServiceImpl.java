@@ -2,10 +2,11 @@ package com.example.RescueProject.service;
 
 import com.example.RescueProject.model.EStatus;
 import com.example.RescueProject.model.RescueRequest;
+import com.example.RescueProject.model.TypeRequest;
 import com.example.RescueProject.model.User;
 import com.example.RescueProject.repository.RescueRequestRepository;
+import com.example.RescueProject.repository.TypeRescueRequestRepository;
 import com.example.RescueProject.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,15 @@ import java.util.Optional;
 public class RescueRequestServiceImpl implements RescueRequestService {
     private RescueRequestRepository rescueRequestRepository;
     private final UserRepository userRepository;
+    private  TypeRescueRequestRepository typeRescueRequestRepository;
 
 
-    public RescueRequestServiceImpl(RescueRequestRepository rescueRequestRepository,UserRepository userRepository) {
+    public RescueRequestServiceImpl(RescueRequestRepository rescueRequestRepository,
+                                    UserRepository userRepository,
+                                    TypeRescueRequestRepository typeRescueRequestRepository) {
         this.rescueRequestRepository =rescueRequestRepository;
         this.userRepository = userRepository;
+        this.typeRescueRequestRepository = typeRescueRequestRepository;
     }
 
     @Override
@@ -40,8 +45,14 @@ public class RescueRequestServiceImpl implements RescueRequestService {
             throw new RuntimeException("Phải đăng ký tài khoản");
         }
 
-        rescueRequest.setVictim(user);
+        if (rescueRequest.getType() != null && rescueRequest.getType().getId() != null) {
+            Long typeId = rescueRequest.getType().getId();
+            TypeRequest typeRequest = typeRescueRequestRepository.findById(rescueRequest.getType().getId())
+                    .orElseThrow(() -> new RuntimeException("Loại cứu hộ không tồn tại"));
+            rescueRequest.setType(typeRequest); // Gán object "thật" từ DB vào
+        }
 
+        rescueRequest.setVictim(user);
         rescueRequest.setStatus(EStatus.WAITING_ACCEPT);
         return rescueRequestRepository.save(rescueRequest);
     }

@@ -6,6 +6,7 @@ import com.example.RescueProject.model.User;
 import com.example.RescueProject.response.ApiResponse;
 import com.example.RescueProject.service.RescueRequestService;
 import com.example.RescueProject.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class RescueRequestUserController {
     }
 
     @PostMapping("/requests")
-    public ResponseEntity<ApiResponse<RescueRequest>> createRescue(@RequestBody RescueRequest rescueRequest){
+    public ResponseEntity<ApiResponse<RescueRequest>> createRescue(@Valid @RequestBody RescueRequest rescueRequest){
 
         RescueRequest newRequest =this.rescueRequestService.createRescue(rescueRequest);
         var result =new ApiResponse<>(HttpStatus.CREATED,"Create Rescue", newRequest,null);
