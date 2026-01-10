@@ -86,13 +86,25 @@ const Navbar = () => {
                       aria-expanded="false"
                     >
                       {/* Avatar Icon */}
-                      <div className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: '25px', height: '25px', fontSize: '12px' }}>
-                        <i className="fas fa-user"></i>
-                      </div>
+                      {user?.avatar ? (
+  <img
+    src={user.avatar}
+    alt="Avatar"
+    className="rounded-circle"
+    style={{ width: '25px', height: '25px', objectFit: 'cover' }}
+  />
+) : (
+  <div
+    className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
+    style={{ width: '25px', height: '25px', fontSize: '12px' }}
+  >
+    <i className="fas fa-user"></i>
+  </div>
+)}
 
                       {/* Display Email or Username */}
                       <span className="small">
-                        {user.email?.split('@')[0] || "Member"}
+                        {user.username || user.email.split("@")[0]}
                       </span>
                     </button>
 
@@ -103,7 +115,7 @@ const Navbar = () => {
                       </li>
                       <li><hr className="dropdown-divider" /></li>
 
-                      <li><Link className="dropdown-item" to="/"><i className="fas fa-id-card me-2 text-muted"></i>Hồ sơ cá nhân</Link></li>
+                      <li><Link className="dropdown-item" to="/userDetail"><i className="fas fa-id-card me-2 text-muted"></i>Hồ sơ cá nhân</Link></li>
 
                       <li><hr className="dropdown-divider" /></li>
 

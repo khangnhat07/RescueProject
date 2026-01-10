@@ -17,8 +17,8 @@ import RescueRequestPage from "./components/rescueRequest/RescueRequestPage.jsx"
 import UserRequestDetail from "./components/rescueRequest/UserRequestDetail.jsx";
 import ManageRequestPage from "./components/manageRescueRequest/ManageRequestPage.jsx";
 import ManageRequestDetail from "./components/manageRescueRequest/ManageRequestDetail.jsx";
-import AdminRescueRequestPage from "./components/admin/AdminRescueRequestPage.jsx";
-import AdminRequestDetail from "./components/admin/AdminRequestDetail.jsx";
+import AdminRescueRequestPage from "./components/Admin/AdminRescueRequestPage.jsx";
+import AdminRequestDetail from "./components/Admin/AdminRequestDetail.jsx";
 import ChatPage from "./components/chat/ChatPage.jsx";
 import Blog from "./components/Blog/Blog.jsx";
 import AdminLayout from "./components/Admin/AdminLayout.jsx";

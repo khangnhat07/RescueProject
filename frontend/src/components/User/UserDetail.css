@@ -154,3 +154,27 @@
     .profile-card { flex-direction: column; }
     .profile-sidebar, .profile-form-section { width: 100%; }
 }
+/* Tối ưu riêng cho thẻ select */
+.input-group-custom select.form-select {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Padding trái 45px để nhường chỗ cho icon */
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #f9f9f9;
+    color: #333; /* Màu chữ đen để hiện rõ trên nền trắng */
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Khi nhấn vào ô select */
+.input-group-custom select.form-select:focus {
+    border-color: #3a7bd5;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.1);
+}
+
+/* Đảm bảo icon thành phố nằm đúng vị trí */
+.input-group-custom i.fa-city {
+    z-index: 5;
+    pointer-events: none; /* Tránh việc click vào icon làm không mở được dropdown */
+}

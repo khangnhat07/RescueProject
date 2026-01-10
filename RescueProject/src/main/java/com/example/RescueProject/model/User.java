@@ -24,6 +24,9 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     // bcrypt
+
+    private String avatar;
+
     private String email;
     private String phone;
     private String date;
@@ -31,7 +34,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private EUserRole role; // ROLE_VICTIM, ROLE_RESCUETEAM, ROLE_ADMIN
 
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
     @OneToMany(mappedBy = "victim")

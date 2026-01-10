@@ -1,4 +1,8 @@
-const AdminNavbar = ({ onToggle }) => (
+import { useAuth } from "../../context/AuthContext";
+const AdminNavbar = ({ onToggle }) => {
+  const { user, logout } = useAuth();
+  console.log("USER AVATAR:", user?.avatar);
+return (
   <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-3 py-2 sticky-top">
     <div className="container-fluid p-0">
       <button className="btn btn-light border me-2" onClick={onToggle}>
@@ -28,20 +32,43 @@ const AdminNavbar = ({ onToggle }) => (
             className="d-flex align-items-center text-decoration-none text-dark"
             data-bs-toggle="dropdown"
           >
-            <img 
-              src="https://ui-avatars.com/api/?name=Admin+Sar&background=0d6efd&color=fff"
-              alt="Avatar" 
-              width="32" 
-              height="32" 
-              className="rounded-circle me-md-2" 
-            />
-            <span className="fw-bold d-none d-md-inline small">Admin Khang</span>
+         {user?.avatar ? (
+    // ĐÃ UPLOAD → DÙNG ẢNH
+    <img
+      src={user.avatar}
+      alt="Avatar"
+      width="32"
+      height="32"
+      className="rounded-circle me-md-2"
+      style={{ objectFit: 'cover' }}
+    />
+  ) : (
+    // CHƯA UPLOAD → DÙNG ICON
+    <div
+      className="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-md-2"
+      style={{ width: '32px', height: '32px', fontSize: '14px' }}
+    >
+      <i className="fas fa-user"></i>
+    </div>
+  )}
+
+<span className="fw-bold d-none d-md-inline small">
+  {user?.username || user?.email.split("@")[0] || "Admin"}
+</span>
+
           </a>
           
           <ul className="dropdown-menu dropdown-menu-end shadow border-0">
-            <li><a className="dropdown-item" href="#">Hồ sơ</a></li>
+            <li><a className="dropdown-item" href="/userDetail">Hồ sơ</a></li>
             <li><hr className="dropdown-divider" /></li>
-            <li><a className="dropdown-item text-danger" href="#">Đăng xuất</a></li>
+            <li>
+                <button
+                  className="dropdown-item text-danger"
+                  onClick={logout}
+                >
+                  Đăng xuất
+                </button>
+              </li>
           </ul>
         </div>
       </div>
@@ -49,4 +76,5 @@ const AdminNavbar = ({ onToggle }) => (
   </nav>
 );
 
+};
 export default AdminNavbar;

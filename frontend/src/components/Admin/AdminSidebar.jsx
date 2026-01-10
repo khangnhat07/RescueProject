@@ -1,12 +1,16 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-
+import { Link, useLocation,useNavigate } from "react-router-dom";
+import { useAuth } from '../../context/AuthContext';
 const AdminSidebar = () => {
   const location = useLocation();
-
+  const {logout}  = useAuth();
+  const navigate = useNavigate();
   // Hàm kiểm tra trang hiện tại để active menu
   const isActive = (path) => (location.pathname.includes(path) ? "active" : "");
-
+  const handleAdminLogout = () => {
+    logout();
+    navigate('/'); // Redirect to Home after logout
+  };
   return (
     <div id="sidebar-wrapper">
       <div className="sidebar-heading d-flex align-items-center gap-2">
@@ -57,11 +61,16 @@ const AdminSidebar = () => {
 
 
         <Link
-          to="/logout"
+          to="#"
+          onClick={(e) => {
+          e.preventDefault();
+          handleAdminLogout();
+          }}
           className="list-group-item list-group-item-action text-danger mt-2"
         >
           <i className="fas fa-sign-out-alt me-3"></i>Đăng xuất
         </Link>
+
       </div>
     </div>
   );
