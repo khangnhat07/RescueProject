@@ -1,0 +1,133 @@
+/* =========================
+   GLOBAL
+========================= */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+:root {
+    --sar-red: #dc3545;
+    --sar-dark: #212529;
+    --sar-blue: #0d6efd;
+}
+
+/* =========================
+   NEWS CARD
+========================= */
+
+/* Card tổng */
+.news-card {
+    height: 200px;                     /* CỐ ĐỊNH CHIỀU CAO */
+    overflow: hidden;
+    border: none;
+    border-radius: 0.5rem;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;  
+}
+
+/* Hover */
+.news-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+/* Cột chứa ảnh */
+.news-image-wrapper {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    flex-shrink: 0;
+}
+
+/* Ảnh */
+.news-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;                 /* CẮT ẢNH CHO VỪA */
+    transition: transform 0.3s ease;
+}
+
+/* Hover zoom ảnh */
+.news-card:hover .news-image {
+    transform: scale(1.05);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.news-card .card-body {
+    height: 100%;
+    padding: 1rem;
+    overflow: hidden;                  /* RẤT QUAN TRỌNG */
+    flex: 1;
+}
+
+/* Title */
+.news-card .card-title {
+    font-size: 1rem;
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;      /* CHỈ 1 DÒNG */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Nội dung preview */
+.news-card .card-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+    line-height: 1.4;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 4;              /* Giới hạn 3 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Badge */
+.news-card .badge {
+    font-size: 0.7rem;
+}
+
+/* =========================
+   CARD TYPES
+========================= */
+
+.card-alert {
+    border-left: 5px solid var(--sar-red);
+}
+
+.card-guide {
+    border-left: 5px solid var(--sar-blue);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.shelter-widget {
+    position: sticky;
+    top: 90px;
+}
+.blog-detail-image-wrapper {
+    width: 100%;
+    height: 100%;               /* CHIỀU CAO CỐ ĐỊNH */
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #f2f2f2;
+}
+.blog-detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;           /* CẮT ẢNH ĐẸP */
+}

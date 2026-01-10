@@ -1,0 +1,204 @@
+import { useEffect, useState } from "react";
+import { updateRequestAPI } from "../../service/api.service";
+import { uploadImageToCloudinary } from "../../utils/cloudinaryUploads";
+
+const UpdateRescueRequestModal = (props) => {
+    // Các props nhận từ component cha
+    const { show, handleClose, data, loadDetail } = props;
+
+    const [address, setAddress] = useState("");
+    const [detail, setDetail] = useState("");
+    const [typeId, setTypeId] = useState("");
+    const [imageFile, setImageFile] = useState(null); // Để lưu file mới chọn
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (data) {
+            setAddress(data.address || "");
+            setDetail(data.detail || "");
+            setTypeId(data.type?.id || "");
+            setImageFile(null);
+        }
+    }, [data, show]);
+
+    const handleUpdateRequest = async () => {
+        setIsSubmitting(true);
+        try {
+            let finalImageUrl = data.image;
+            // NẾU CÓ CHỌN FILE MỚI: Upload để lấy link mới
+            if (imageFile) {
+                finalImageUrl = await uploadImageToCloudinary(imageFile);
+            }
+            const res = await updateRequestAPI(data.id, address, detail, typeId, finalImageUrl);
+            console.log("check res update:", res);
+            if (res && res.status === "success") {
+                alert("Cập nhật thông tin thành công!");
+                await loadDetail();
+                handleClose(); // Đóng modal
+
+            } else {
+                alert("Có lỗi xảy ra khi cập nhật.");
+            }
+
+        } catch (error) {
+            console.error("Lỗi update:", error);
+            alert("Lỗi kết nối server.");
+        } finally {
+            setIsSubmitting(false);
+        }
+
+        handleClose();
+    }
+
+    if (!show) return null;
+
+    return (
+        <>
+            <div
+                className="modal fade show d-block"
+                style={{ backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 1050 }}
+                onClick={handleClose} // Đóng khi click ra ngoài
+            >
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    onClick={(e) => e.stopPropagation()} // Ngăn đóng modal khi click vào bên trong
+                >
+                    <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '20px' }}>
+
+                        {/* Header: Giữ style SOS-header nhưng dạng Modal */}
+                        <div className="modal-header bg-danger text-white border-0 py-3 px-4" style={{ borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }}>
+                            <div className="d-flex align-items-center">
+                                <i className="fas fa-edit me-3 fa-lg"></i>
+                                <div>
+                                    <h5 className="fw-bold mb-0 text-uppercase ls-1">Cập Nhật Tin Hiệu</h5>
+                                    <small className="opacity-75">Chỉnh sửa thông tin yêu cầu #{data?.id}</small>
+                                </div>
+                            </div>
+                            <button type="button" className="btn-close btn-close-white" onClick={handleClose}></button>
+                        </div>
+
+                        <div className="modal-body p-4 bg-white">
+                            <form>
+                                {/* VỊ TRÍ & TÌNH TRẠNG */}
+                                <div className="mb-4">
+                                    <label className="form-label fw-bold small text-secondary text-uppercase mb-2">Vị trí hiện tại</label>
+                                    <div className="input-group mb-3 shadow-sm">
+                                        <button className="btn btn-danger" type="button">
+                                            <i className="fas fa-location-crosshairs"></i> GPS
+                                        </button>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Tọa độ hoặc địa chỉ..."
+                                            value={address}
+                                            onChange={(e) => setAddress(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <label className="form-label fw-bold small text-secondary text-uppercase mb-2">Loại cứu hộ</label>
+                                    <select
+                                        className="form-select mb-3 fw-bold text-danger bg-danger bg-opacity-10 border-danger shadow-sm"
+                                        value={typeId}
+                                        onChange={(e) => setTypeId(e.target.value)}
+                                    >
+                                        <option value="">Chọn loại cứu hộ</option>
+                                        <option value="1">Lương thực</option>
+                                        <option value="2">Cứu người</option>
+                                        <option value="3">Y tế</option>
+                                        <option value="4">Quần áo</option>
+                                    </select>
+
+                                    <label className="form-label fw-bold small text-secondary text-uppercase mb-2">Mô tả chi tiết tình hình</label>
+                                    <textarea
+                                        className="form-control bg-light border-0 shadow-sm"
+                                        rows="4"
+                                        placeholder="Mô tả chi tiết tình hình, số lượng người..."
+                                        value={detail}
+                                        onChange={(e) => setDetail(e.target.value)}
+                                        style={{ borderRadius: '10px' }}
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="form-label fw-bold small text-secondary text-uppercase mb-2">
+                                        Hình ảnh hiện trường
+                                    </label>
+
+                                    {/* Hiển thị ảnh cũ nếu có */}
+                                    <div className="mb-3">
+                                        <p className="small text-muted mb-1">Ảnh đã gửi:</p>
+                                        {data?.image ? (
+                                            <img
+                                                src={data.image}
+                                                alt="Current"
+                                                className="rounded border shadow-sm"
+                                                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            <div className="text-muted small border rounded p-2 bg-light">Chưa có ảnh</div>
+                                        )}
+                                    </div>
+
+                                    {/* Input chọn ảnh mới */}
+                                    <div className="input-group">
+                                        <input
+                                            type="file"
+                                            className="form-control form-control-sm"
+                                            id="updateFile"
+                                            onChange={(e) => setImageFile(e.target.files[0])}
+                                        />
+                                        <label className="input-group-text bg-light" htmlFor="updateFile">
+                                            <i className="fas fa-camera"></i>
+                                        </label>
+                                    </div>
+                                    <small className="text-muted">Để trống nếu không muốn thay đổi ảnh.</small>
+                                </div>
+
+                                {/* NÚT LƯU */}
+                                <div className="row g-2">
+                                    <div className="col-6">
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-secondary w-100 py-2 fw-bold rounded-pill"
+                                            onClick={handleClose}
+                                        >
+                                            HỦY BỎ
+                                        </button>
+                                    </div>
+                                    <div className="col-6">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger w-100 py-2 fw-bold rounded-pill shadow-sm"
+                                            onClick={handleUpdateRequest}
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? (
+                                                <span className="spinner-border spinner-border-sm me-2"></span>
+                                            ) : (
+                                                <i className="fas fa-save me-2"></i>
+                                            )}
+                                            LƯU THÔNG TIN
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        {/* Footer nhỏ footer giống trang Create */}
+                        <div className="modal-footer border-0 justify-content-center bg-white pb-4 pt-0">
+                            <p className="small text-muted fst-italic mb-0">
+                                <i className="fas fa-history me-1 text-primary"></i>
+                                Thay đổi sẽ được cập nhật ngay lập tức.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Layer đảm bảo Modal luôn nổi lên trên */}
+            <div className="modal-backdrop fade show" style={{ zIndex: 1040 }}></div>
+        </>
+    );
+};
+
+export default UpdateRescueRequestModal;

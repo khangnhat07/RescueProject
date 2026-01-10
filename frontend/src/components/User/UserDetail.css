@@ -1,0 +1,180 @@
+/* Container bao phủ toàn màn hình với Gradient */
+.profile-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Card chính kiểu Glassmorphism */
+.profile-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    display: flex;
+    max-width: 900px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar bên trái (Màu đậm hơn) */
+.profile-sidebar {
+    background: rgba(0, 0, 0, 0.2);
+    width: 35%;
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    padding: 5px;
+    background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #16213e;
+}
+
+.upload-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #fff;
+    color: #333;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.upload-badge:hover { transform: scale(1.1); background: #00d2ff; color: #fff; }
+
+/* Các ô Input tùy chỉnh */
+.profile-form-section {
+    padding: 40px;
+    width: 65%;
+    background: #fff;
+}
+
+.form-title {
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 30px;
+}
+
+.custom-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.input-group-custom {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-custom i {
+    position: absolute;
+    left: 15px;
+    color: #aaa;
+}
+
+.input-group-custom input, 
+.input-group-custom textarea {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #f9f9f9;
+    transition: 0.3s;
+    outline: none;
+}
+
+.input-group-custom input:focus {
+    border-color: #3a7bd5;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.1);
+}
+
+.readonly input { background: #f0f0f0; cursor: not-allowed; }
+
+/* Nút bấm */
+.btn-save {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-save:hover { background: #3a7bd5; transform: translateY(-2px); }
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid #eee;
+    padding: 12px 30px;
+    border-radius: 12px;
+    color: #666;
+    font-weight: 600;
+}
+
+/* Thống kê nhỏ */
+.sidebar-stats { display: flex; width: 100%; justify-content: space-around; }
+.stat-item { flex: 1; }
+.stat-item span { display: block; font-size: 1.2rem; font-weight: bold; }
+.stat-item small { font-size: 0.7rem; color: rgba(255,255,255,0.6); }
+
+/* Responsive cho điện thoại */
+@media (max-width: 768px) {
+    .profile-card { flex-direction: column; }
+    .profile-sidebar, .profile-form-section { width: 100%; }
+}
+/* Tối ưu riêng cho thẻ select */
+.input-group-custom select.form-select {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Padding trái 45px để nhường chỗ cho icon */
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #f9f9f9;
+    color: #333; /* Màu chữ đen để hiện rõ trên nền trắng */
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Khi nhấn vào ô select */
+.input-group-custom select.form-select:focus {
+    border-color: #3a7bd5;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.1);
+}
+
+/* Đảm bảo icon thành phố nằm đúng vị trí */
+.input-group-custom i.fa-city {
+    z-index: 5;
+    pointer-events: none; /* Tránh việc click vào icon làm không mở được dropdown */
+}
