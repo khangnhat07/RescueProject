@@ -280,7 +280,7 @@ const ManageRequestDetail = () => {
                                 </div>
                             </div>
                             <div className="border-top p-3 bg-light text-muted small">
-                                <div><i className="fa-solid fa-house me-2"></i>Địa chỉ: <strong>{request.victim.address}</strong></div>
+                                <div><i className="fa-solid fa-house me-2"></i>Địa chỉ: <strong>{request.victim.address?.street} {request.victim.address?.city}</strong></div>
                             </div>
                         </div>
 
